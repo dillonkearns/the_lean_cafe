@@ -1,4 +1,4 @@
-<h2>Show table</h2>
+<h2>Show table <%= obfuscate @table %></h2>
 
 <ul>
 
