@@ -13,10 +13,6 @@
     <td>
       <%= link obfuscate(table), to: table_path(@conn, :show, obfuscate(table)) %>
     </td>
-      <td class="text-right">
-        <%= link "Edit", to: table_path(@conn, :edit, obfuscate(table)), class: "btn btn-default btn-xs" %>
-        <%= link "Delete", to: table_path(@conn, :delete, obfuscate(table)), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
-      </td>
     </tr>
 <% end %>
   </tbody>
