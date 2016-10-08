@@ -3,6 +3,11 @@ defmodule TheLeanCafe.TableController do
 
   alias TheLeanCafe.Table
 
+  def unobfuscate(hashid) do
+    id = Obfuscator.decode(hashid)
+    Repo.get!(Table, id)
+  end
+
   def index(conn, _params) do
     tables = Repo.all(Table)
     render(conn, "index.html", tables: tables)
@@ -26,8 +31,8 @@ defmodule TheLeanCafe.TableController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    table = Repo.get!(Table, id)
+  def show(conn, %{"hashid" => hashid}) do
+    table = unobfuscate(hashid)
     render(conn, "show.html", table: table)
   end
 
