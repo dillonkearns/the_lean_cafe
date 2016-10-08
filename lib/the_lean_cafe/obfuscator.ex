@@ -4,13 +4,18 @@ defmodule Obfuscator do
     min_len: 10
   ])
 
+  @salt_array Enum.to_list(1..10)
+
   def encode(table_id) do
-    Hashids.encode(@config, table_id * 98989)
+    Hashids.encode(@config, [table_id] ++ @salt_array)
   end
 
   def decode(table_hashid) do
-    {:ok, [multiplied_table_id]} = Hashids.decode(@config, table_hashid)
-    {table_id, 0} = {div(multiplied_table_id, 98989), rem(multiplied_table_id, 98989)}
-    table_id
+    {:ok, array} = Hashids.decode(@config, table_hashid)
+
+    case array do
+      [table_id | @salt_array] -> table_id
+      _ -> -1
+    end
   end
 end
