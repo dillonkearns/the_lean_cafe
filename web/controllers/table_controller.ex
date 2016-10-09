@@ -22,10 +22,9 @@ defmodule TheLeanCafe.TableController do
     changeset = Table.changeset(%Table{}, %{})
 
     case Repo.insert(changeset) do
-      {:ok, _table} ->
+      {:ok, table} ->
         conn
-        |> put_flash(:info, "Table created successfully.")
-        |> redirect(to: table_path(conn, :index))
+        |> redirect(to: table_path(conn, :show, Obfuscator.encode(table.id)))
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
     end

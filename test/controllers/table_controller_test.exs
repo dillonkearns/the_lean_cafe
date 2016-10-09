@@ -17,8 +17,8 @@ defmodule TheLeanCafe.TableControllerTest do
 
   test "creates resource and redirects when data is valid", %{conn: conn} do
     conn = post conn, table_path(conn, :create), table: @valid_attrs
-    assert redirected_to(conn) == table_path(conn, :index)
-    assert Repo.get_by(Table, @valid_attrs)
+    assert table = Repo.get_by(Table, @valid_attrs)
+    assert redirected_to(conn) == table_path(conn, :show, Obfuscator.encode(table.id))
   end
 
   test "shows chosen resource", %{conn: conn} do
