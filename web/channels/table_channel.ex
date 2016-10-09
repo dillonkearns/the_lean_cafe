@@ -1,8 +1,9 @@
 defmodule TheLeanCafe.TableChannel do
   use Phoenix.Channel
 
-  # def join("table:hardcoded", _auth_msg, socket) do
   def join(room_name, _auth_msg, socket) do
+  intercept ["new_topic", "topics"]
+
     {:ok, socket}
   end
 

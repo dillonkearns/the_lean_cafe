@@ -7,7 +7,7 @@ defmodule TheLeanCafe.TableView do
 
   def unobfuscate(hashid) do
     id = Obfuscator.decode(hashid)
-    Repo.get!(Table, id)
+    TheLeanCafe.Repo.get!(Table, id)
   end
 
 end
