@@ -8,6 +8,10 @@ defmodule TheLeanCafe.TableChannel do
     {:ok, socket}
   end
 
+  def topic_to_html(topic) do
+    "<li>#{topic}</li>"
+  end
+
   def topics(table_hashid) do
     table_id = Obfuscator.decode(table_hashid)
     table =
@@ -16,6 +20,7 @@ defmodule TheLeanCafe.TableChannel do
     table.topics
     |> Enum.map(&(&1.name))
     |> Enum.reverse
+    |> Enum.map(&topic_to_html/1)
   end
 
   def handle_info({:after_join, _params}, socket = %{topic: "table:" <> table_hashid}) do
