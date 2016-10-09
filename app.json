@@ -1,0 +1,27 @@
+{
+  "name": "Shield",
+  "description": "OAuth2 provider microservice endpoints.",
+  "repository": "https://github.com/mustafaturan/shield",
+  "keywords": ["phoenix", "ecto", "shield"],
+  "buildpacks": [
+    {
+      "url": "https://github.com/HashNuke/heroku-buildpack-elixir.git"
+    }
+  ],
+  "env": {
+    "SECRET_KEY_BASE": {
+      "description": "A secret key for verifying the integrity of signed cookies.",
+      "generator": "secret"
+    },
+    "POOL_SIZE": {
+      "description": "Database pool size",
+      "value": "10"
+    }
+  },
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "scripts": {
+    "postdeploy": "MIX_ENV=prod mix ecto.migrate"
+  }
+}
