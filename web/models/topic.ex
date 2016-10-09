@@ -1,8 +1,9 @@
-defmodule TheLeanCafe.Table do
+defmodule TheLeanCafe.Topic do
   use TheLeanCafe.Web, :model
 
-  schema "tables" do
-    has_many :topics, TheLeanCafe.Topic
+  schema "topics" do
+    field :name, :string
+    belongs_to :table, TheLeanCafe.Table
 
     timestamps()
   end
@@ -12,7 +13,7 @@ defmodule TheLeanCafe.Table do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [])
-    |> validate_required([])
+    |> cast(params, [:name])
+    |> validate_required([:name])
   end
 end

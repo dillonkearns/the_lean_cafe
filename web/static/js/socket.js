@@ -65,10 +65,18 @@ chatInput.addEventListener("keypress", event => {
   }
 })
 
-channel.on("new_topic", payload => {
+function addTopic(topicName) {
   let messageItem = document.createElement("li")
-  messageItem.innerText = `[${Date()}] ${payload.body}`
+  messageItem.innerText = `${topicName}`
   messagesContainer.appendChild(messageItem)
+}
+
+channel.on("new_topic", payload => {
+  addTopic(payload.body)
+})
+
+channel.on("topics", payload => {
+  payload.topics.forEach(topicName => addTopic(topicName))
 })
 
 channel.join()
