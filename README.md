@@ -1,4 +1,4 @@
-# The Lean Cafe [![Build Status](https://semaphoreci.com/api/v1/dillonkearns/the_lean_cafe/branches/master/badge.svg)](https://semaphoreci.com/dillonkearns/the_lean_cafe)
+# The Lean Cafe [![Build Status](https://semaphoreci.com/api/v1/dillonkearns/the_lean_cafe/branches/master/badge.svg)](https://semaphoreci.com/dillonkearns/the_lean_cafe) [![Stories in Ready](https://badge.waffle.io/dillonkearns/the_lean_cafe.svg?label=ready&title=Ready)](http://waffle.io/dillonkearns/the_lean_cafe)
 
 To start your Phoenix app:
 
