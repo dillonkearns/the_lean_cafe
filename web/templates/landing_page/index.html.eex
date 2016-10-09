@@ -1,0 +1,1 @@
+<%= link "Grab a table", to: table_path(@conn, :new), class: "btn btn-primary" %>
