@@ -12,7 +12,9 @@ defmodule TheLeanCafe.TableChannel do
     table =
       TheLeanCafe.Repo.get!(TheLeanCafe.Table, 1)
       |> TheLeanCafe.Repo.preload(:topics)
-    table.topics |> Enum.map(&(&1.name))
+    table.topics
+    |> Enum.map(&(&1.name))
+    |> Enum.reverse
   end
 
   def handle_info({:after_join, _params}, socket) do
