@@ -1,8 +1,10 @@
 <h2>Show table <%= obfuscate @table %></h2>
 
-<ul>
+<h3>Topics</h3>
+<ul id="topics">
 
 </ul>
+<input id="topic-input" type="text"></input>
 
 <%= link "Edit", to: table_path(@conn, :edit, @table) %>
 <%= link "Back", to: table_path(@conn, :index) %>

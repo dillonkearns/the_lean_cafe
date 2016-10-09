@@ -2,7 +2,7 @@ defmodule TheLeanCafe.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", TheLeanCafe.RoomChannel
+  channel "table:*", TheLeanCafe.TableChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
