@@ -8,3 +8,5 @@
 
 <%= link "Edit", to: table_path(@conn, :edit, @table) %>
 <%= link "Back", to: table_path(@conn, :index) %>
+
+<input type="hidden" name="table-id" id="table-id" value="<%= obfuscate(@table) %>">
