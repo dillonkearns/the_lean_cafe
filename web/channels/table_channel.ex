@@ -28,6 +28,11 @@ defmodule TheLeanCafe.TableChannel do
     {:noreply, socket}
   end
 
+  def handle_in("roman_vote", %{"topic_id" => topic_id}, socket = %{topic: "table:" <> table_hashid}) do
+    IO.puts "roman_vote:::::::::::::::: topic_id = #{topic_id}"
+    {:noreply, socket}
+  end
+  
   def handle_in("new_topic", %{"body" => body}, socket = %{topic: "table:" <> table_hashid}) do
     table_id = Obfuscator.decode(table_hashid)
     topic = %TheLeanCafe.Topic{table_id: table_id, name: body}

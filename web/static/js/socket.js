@@ -71,7 +71,7 @@ function roomHash() {
 }
 
 window.romanVote = function (id) {
-    alert(`romanVote(${id}) :-)`)
+    channel.push("roman_vote", {topic_id: id})
 }
 
 function addTopic(topicHtml) {
