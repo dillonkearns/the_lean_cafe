@@ -70,6 +70,10 @@ function roomHash() {
   return document.querySelector("#table-id").value
 }
 
+window.romanVote = function (id) {
+    alert(`romanVote(${id}) :-)`)
+}
+
 function addTopic(topicHtml) {
   $(`#topics`).append(topicHtml)
 }

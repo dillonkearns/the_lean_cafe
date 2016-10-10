@@ -9,7 +9,8 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   def topic_to_html(topic) do
-    "<li>#{topic}</li>"
+    vote_button = "<a style='margin-right: 20px;' onclick='window.romanVote(#{topic.id});' href='javascript:void(0)')' class='btn btn-primary'>Vote</a>"
+    "<li>#{vote_button}#{topic.name}</li>"
   end
 
   def topics(table_hashid) do
@@ -18,9 +19,8 @@ defmodule TheLeanCafe.TableChannel do
       TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id)
       |> TheLeanCafe.Repo.preload(:topics)
     table.topics
-    |> Enum.map(&(&1.name))
-    |> Enum.reverse
     |> Enum.map(&topic_to_html/1)
+    |> Enum.reverse
   end
 
   def handle_info({:after_join, _params}, socket = %{topic: "table:" <> table_hashid}) do
