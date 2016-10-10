@@ -30,6 +30,8 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   def handle_in("roman_vote", %{"topic_id" => topic_id}, socket = %{topic: "table:" <> table_hashid}) do
+    TheLeanCafe.Repo.insert!(%TheLeanCafe.DotVote{topic_id: topic_id})
+    broadcast! socket, "topics", %{topics: topics(table_hashid)}
     {:noreply, socket}
   end
 
@@ -37,12 +39,12 @@ defmodule TheLeanCafe.TableChannel do
     table_id = Obfuscator.decode(table_hashid)
     topic = %TheLeanCafe.Topic{table_id: table_id, name: body}
     TheLeanCafe.Repo.insert!(topic)
-    broadcast! socket, "new_topic", %{body: body}
+    broadcast! socket, "topics", %{topics: topics(table_hashid)}
     {:noreply, socket}
   end
 
-  def handle_out("new_topic", payload, socket) do
-    push socket, "new_topic", payload
+  def handle_out(event, payload, socket) do
+    push socket, event, payload
     {:noreply, socket}
   end
 end

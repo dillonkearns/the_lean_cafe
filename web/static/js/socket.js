@@ -83,6 +83,7 @@ channel.on("new_topic", payload => {
 })
 
 channel.on("topics", payload => {
+  $(`#topics`).empty()
   payload.topics.forEach(topicName => addTopic(topicName))
 })
 
