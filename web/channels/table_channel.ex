@@ -10,8 +10,9 @@ defmodule TheLeanCafe.TableChannel do
 
   def topic_to_html(topic) do
     dot_votes = TheLeanCafe.Topic.dot_vote_count(topic.id)
-    vote_button = "<a style='margin-right: 20px;' onclick='window.romanVote(#{topic.id});' href='javascript:void(0)')' class='btn btn-primary'>Vote</a>"
-    "<li>#{vote_button}#{topic.name} (Votes: #{dot_votes})</li>"
+    # vote_button = "<a style='margin-right: 20px;' onclick='window.romanVote(#{topic.id});' href='javascript:void(0)')' class='btn btn-primary'>Vote</a>"
+    vote_button = "<a style='margin-right: 20px; padding-left: 10px; padding-right: 10px;' onclick='window.romanVote(#{topic.id});' href='javascript:void(0)')' class='label label-info'>#{dot_votes}</a>"
+    "<li>#{vote_button}#{topic.name}</li>"
   end
 
   def topics(table_hashid) do
