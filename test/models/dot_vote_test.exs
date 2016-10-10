@@ -11,8 +11,4 @@ defmodule TheLeanCafe.DotVoteTest do
     assert changeset.valid?
   end
 
-  test "changeset with invalid attributes" do
-    changeset = DotVote.changeset(%DotVote{}, @invalid_attrs)
-    refute changeset.valid?
-  end
 end
