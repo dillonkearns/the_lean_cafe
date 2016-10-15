@@ -3,7 +3,7 @@ defmodule TheLeanCafe.TableChannel do
 
   intercept ["new_topic", "topics"]
 
-  def join("table:" <> room_name, params, socket) do
+  def join("table:" <> _room_name, params, socket) do
     send(self, {:after_join, params})
     {:ok, socket}
   end
