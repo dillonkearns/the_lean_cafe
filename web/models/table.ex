@@ -15,4 +15,8 @@ defmodule TheLeanCafe.Table do
     |> cast(params, [])
     |> validate_required([])
   end
+
+  def hashid(%TheLeanCafe.Table{id: id}) do
+    Obfuscator.encode(id)
+  end
 end

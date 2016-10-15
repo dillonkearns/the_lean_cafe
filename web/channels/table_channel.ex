@@ -41,7 +41,7 @@ defmodule TheLeanCafe.TableChannel do
     topic = %TheLeanCafe.Topic{table_id: table_id, name: body}
     TheLeanCafe.Repo.insert!(topic)
     broadcast! socket, "topics", %{topics: topics(table_hashid)}
-    {:noreply, socket}
+    {:reply, :ok, socket}
   end
 
   def handle_out(event, payload, socket) do
