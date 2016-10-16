@@ -17,6 +17,6 @@ defmodule TheLeanCafe.Channels.TableChannelTest do
     assert_broadcast "topics", topics
     assert length(TheLeanCafe.Repo.all(TheLeanCafe.Topic)) == topic_count + 1
     new_topic_html = topics.topics |> Enum.at(0)
-    assert new_topic_html =~ "Some interesting topic"
+    assert new_topic_html =~ ~r(^<li>.*Some interesting topic</li>$)
   end
 end
