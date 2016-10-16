@@ -12,7 +12,7 @@ defmodule TheLeanCafe.TopicViewTest do
   test "shows vote button next to topic" do
     topic = %TheLeanCafe.Topic{id: 123, name: "Some cool topic"}
     assert render_to_string(TheLeanCafe.TopicView, "show.html", topic: topic, dot_votes: 0) =~
-       ~r/<a.*onclick='window.romanVote\(123\);'.*<\/a>/s
+       ~r/<a.*onclick="window.romanVote\(123\);".*<\/a>/s
   end
 
   test "shows correct vote count" do
