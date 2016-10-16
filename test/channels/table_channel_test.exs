@@ -10,6 +10,7 @@ defmodule TheLeanCafe.Channels.TableChannelTest do
   test "adds topic after receiving new_topic", %{socket: socket, table: table} do
     table_hashid = TheLeanCafe.Table.hashid(table)
     {:ok, _reply, socket} = subscribe_and_join(socket, "table:#{table_hashid}", %{})
+    assert_push "topics", %{topics: []}
     topic_count = length(TheLeanCafe.Repo.all(TheLeanCafe.Topic))
 
     ref = push socket, "new_topic", %{body: "Some interesting topic"}
