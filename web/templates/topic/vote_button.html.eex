@@ -1,0 +1,6 @@
+<a
+  style='margin-right: 20px; padding-left: 10px; padding-right: 10px;'
+  onclick='window.romanVote(<%= @topic.id %>);'
+  href='javascript:void(0)')'
+  class='label label-info'><%= @dot_votes %>
+</a>
