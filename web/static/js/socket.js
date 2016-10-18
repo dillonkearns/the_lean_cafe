@@ -84,7 +84,7 @@ channel.on("new_topic", payload => {
 
 channel.on("topics", payload => {
   $(`#topics`).empty()
-  payload.topics.forEach(topicName => addTopic(topicName))
+  $(`#topics`).append(payload.topics)
 })
 
 channel.join()

@@ -15,12 +15,9 @@ defmodule TheLeanCafe.TableChannel do
 
   def topics(table_hashid) do
     table_id = Obfuscator.decode(table_hashid)
-    table =
-      TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id)
-      |> TheLeanCafe.Repo.preload(:topics)
-    table.topics
-    |> Enum.map(&topic_to_html/1)
-    |> Enum.reverse
+
+    topics_and_dot_votes = TheLeanCafe.Topic.with_vote_counts(table_id)
+    Phoenix.View.render_to_string(TheLeanCafe.TopicView, "index.html", topics_and_dot_votes: topics_and_dot_votes)
   end
 
   def handle_info({:after_join, _params}, socket = %{topic: "table:" <> table_hashid}) do

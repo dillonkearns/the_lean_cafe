@@ -10,9 +10,6 @@ defmodule TheLeanCafe.Topic do
     timestamps()
   end
 
-  @doc """
-  Builds a changeset based on the `struct` and `params`.
-  """
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:name])
@@ -28,13 +25,23 @@ defmodule TheLeanCafe.Topic do
     Repo.insert!(%DotVote{topic_id: id})
   end
 
-  def with_vote_counts(table_id) do
-    query = from t in TheLeanCafe.Topic,
+  def vote_counts_query(table_id) do
+    from t in TheLeanCafe.Topic,
       where: t.table_id == ^table_id,
       order_by: t.id,
       left_join: d in assoc(t, :dot_votes),
       select: {t, count(d.id)},
       group_by: t.id
-    TheLeanCafe.Repo.all(query)
   end
+
+  def with_vote_counts(table_id) do
+    TheLeanCafe.Repo.all(vote_counts_query(table_id))
+  end
+
+  def sorted_with_vote_counts(table_id) do
+    TheLeanCafe.Repo.all(vote_counts_query(table_id))
+    |> Enum.sort_by(&(elem(&1, 1)))
+    |> Enum.reverse
+  end
+
 end
