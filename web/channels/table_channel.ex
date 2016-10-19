@@ -1,22 +1,23 @@
 defmodule TheLeanCafe.TableChannel do
   use Phoenix.Channel
 
-  intercept ["new_topic", "topics"]
+  intercept ["new_topic", "topics", "close_poll"]
 
   def join("table:" <> _room_name, params, socket) do
     send(self, {:after_join, params})
     {:ok, socket}
   end
 
-  def topic_to_html(topic) do
-    dot_votes = TheLeanCafe.Topic.dot_vote_count(topic.id)
-    Phoenix.View.render_to_string(TheLeanCafe.TopicView, "show.html", topic: topic, dot_votes: dot_votes)
-  end
-
   def topics(table_hashid) do
     table_id = Obfuscator.decode(table_hashid)
+    table = TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id)
+    topics_and_dot_votes =
+      if table.poll_closed do
+        TheLeanCafe.Topic.sorted_with_vote_counts(table_id)
+      else
+        TheLeanCafe.Topic.with_vote_counts(table_id)
+      end
 
-    topics_and_dot_votes = TheLeanCafe.Topic.with_vote_counts(table_id)
     Phoenix.View.render_to_string(TheLeanCafe.TopicView, "index.html", topics_and_dot_votes: topics_and_dot_votes)
   end
 
@@ -27,6 +28,15 @@ defmodule TheLeanCafe.TableChannel do
 
   def handle_in("roman_vote", %{"topic_id" => topic_id}, socket = %{topic: "table:" <> table_hashid}) do
     TheLeanCafe.Repo.insert!(%TheLeanCafe.DotVote{topic_id: topic_id})
+    broadcast! socket, "topics", %{topics: topics(table_hashid)}
+    {:noreply, socket}
+  end
+
+  def handle_in("close_poll", _, socket = %{topic: "table:" <> table_hashid}) do
+    table_id = Obfuscator.decode(table_hashid)
+    table = TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id)
+    change = Ecto.Changeset.change(table, poll_closed: true)
+    TheLeanCafe.Repo.update(change)
     broadcast! socket, "topics", %{topics: topics(table_hashid)}
     {:noreply, socket}
   end

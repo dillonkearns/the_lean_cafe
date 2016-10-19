@@ -3,6 +3,7 @@ defmodule TheLeanCafe.Table do
 
   schema "tables" do
     has_many :topics, TheLeanCafe.Topic
+    field :poll_closed, :boolean, default: false
 
     timestamps()
   end

@@ -1,7 +1,7 @@
 defmodule TheLeanCafe.TopicTest do
   use TheLeanCafe.ModelCase
 
-  alias TheLeanCafe.{Topic, Repo, DotVote}
+  alias TheLeanCafe.{Topic, Repo}
 
   @valid_attrs %{name: "some content"}
   @invalid_attrs %{}

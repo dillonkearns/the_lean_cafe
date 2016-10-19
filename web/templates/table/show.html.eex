@@ -4,7 +4,10 @@
 <ul id="topics" style="list-style: none;">
 
 </ul>
-<input id="topic-input" type="text"></input>
+<div class="topic-input">
+  <input id="topic-input" type="text"></input>
+  <a id="close-poll" class="btn btn-primary">Close Poll</a>
+</div>
 
 <%= link "Edit", to: table_path(@conn, :edit, @table) %>
 <%= link "Back", to: table_path(@conn, :index) %>

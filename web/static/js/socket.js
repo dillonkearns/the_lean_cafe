@@ -58,6 +58,9 @@ socket.connect()
 let channel = socket.channel(`table:${roomHash()}`, {})
 let chatInput = document.querySelector("#topic-input")
 let messagesContainer = document.querySelector("#topics")
+let closePollButton = document.querySelector("#close-poll")
+let topicInputFields = document.querySelector(".topic-input")
+let pollClosed = false
 
 chatInput.addEventListener("keypress", event => {
   if (event.keyCode === 13) {
@@ -66,12 +69,20 @@ chatInput.addEventListener("keypress", event => {
   }
 })
 
+closePollButton.onclick = function () {
+  channel.push("close_poll", {})
+  $(topicInputFields).hide();
+  pollClosed = true
+}
+
 function roomHash() {
   return document.querySelector("#table-id").value
 }
 
 window.romanVote = function (id) {
+  if (!pollClosed) {
     channel.push("roman_vote", {topic_id: id})
+  }
 }
 
 function addTopic(topicHtml) {
