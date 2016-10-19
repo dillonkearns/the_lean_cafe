@@ -71,6 +71,9 @@ chatInput.addEventListener("keypress", event => {
 
 closePollButton.onclick = function () {
   channel.push("close_poll", {})
+}
+
+function closePoll() {
   $(topicInputFields).hide();
   pollClosed = true
 }
@@ -94,6 +97,9 @@ channel.on("new_topic", payload => {
 })
 
 channel.on("topics", payload => {
+  if (payload.pollClosed) {
+    closePoll()
+  }
   $(`#topics`).empty()
   $(`#topics`).append(payload.topics)
 })

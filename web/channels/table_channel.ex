@@ -22,7 +22,7 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   def handle_info({:after_join, _params}, socket = %{topic: "table:" <> table_hashid}) do
-    push socket, "topics", %{topics: topics(table_hashid)}
+    push socket, "topics", topics_payload(table_hashid)
     {:noreply, socket}
   end
 
@@ -37,15 +37,21 @@ defmodule TheLeanCafe.TableChannel do
     table = TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id)
     change = Ecto.Changeset.change(table, poll_closed: true)
     TheLeanCafe.Repo.update(change)
-    broadcast! socket, "topics", %{topics: topics(table_hashid)}
+    broadcast! socket, "topics", topics_payload(table_hashid)
     {:noreply, socket}
+  end
+
+  def topics_payload(table_hashid) do
+    table_id = Obfuscator.decode(table_hashid)
+    table = TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id)
+    %{topics: topics(table_hashid), pollClosed: table.poll_closed}
   end
 
   def handle_in("new_topic", %{"body" => body}, socket = %{topic: "table:" <> table_hashid}) do
     table_id = Obfuscator.decode(table_hashid)
     topic = %TheLeanCafe.Topic{table_id: table_id, name: body}
     TheLeanCafe.Repo.insert!(topic)
-    broadcast! socket, "topics", %{topics: topics(table_hashid)}
+    broadcast! socket, "topics", topics_payload(table_hashid)
     {:reply, :ok, socket}
   end
 
