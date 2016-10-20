@@ -59,13 +59,18 @@ let channel = socket.channel(`table:${roomHash()}`, {})
 let chatInput = document.querySelector("#topic-input")
 let messagesContainer = document.querySelector("#topics")
 let closePollButton = document.querySelector("#close-poll")
-let topicInputFields = document.querySelector(".topic-input")
+let topicInputForm = $(".topic-input-form")
 let pollClosed = false
+
+function submitTopic() {
+  console.log("Add topic");
+  channel.push("new_topic", {body: chatInput.value})
+  chatInput.value = ""
+}
 
 chatInput.addEventListener("keypress", event => {
   if (event.keyCode === 13) {
-    channel.push("new_topic", {body: chatInput.value})
-    chatInput.value = ""
+    submitTopic()
   }
 })
 
@@ -74,7 +79,7 @@ closePollButton.onclick = function () {
 }
 
 function closePoll() {
-  $(topicInputFields).hide();
+  $(topicInputForm).hide();
   pollClosed = true
 }
 

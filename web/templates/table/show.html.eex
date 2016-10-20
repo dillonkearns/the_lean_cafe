@@ -5,12 +5,21 @@
 
   </ul>
   <div class="topic-input">
-    <input id="topic-input" type="text"></input>
-    <a id="close-poll" class="btn btn-primary">Close Poll</a>
+
+    <div class="row">
+      <div class="col-lg-3 input-group topic-input-form">
+        <input type="text" id="topic-input" class="form-control" placeholder="I want to discuss...">
+        <span class="input-group-btn">
+          <button id="add-topic-button" class="btn btn-default" type="button">Add Topic</button>
+        </span>
+      </div>
+    </div>
+
   </div>
 
-  <%= link "Edit", to: table_path(@conn, :edit, @table) %>
-  <%= link "Back", to: table_path(@conn, :index) %>
+  <div style="padding-top: 50px;" class="topic-input-form">
+    <a id="close-poll" class="btn btn-danger">Close Poll</a>
+  </div>
 
   <input type="hidden" name="table-id" id="table-id" value="<%= obfuscate(@table) %>">
 </div>
