@@ -16,7 +16,7 @@ defmodule TheLeanCafe.Router do
   scope "/", TheLeanCafe do
     pipe_through :browser # Use the default browser stack
 
-    get "/", LandingPageController, :index
+    get "/", TableController, :new
     resources "/tables", TableController, param: "hashid"
   end
 

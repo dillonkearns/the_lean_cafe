@@ -6,6 +6,6 @@
   <% end %>
 
   <div class="form-group">
-    <%= submit "Submit", class: "btn btn-primary" %>
+    <%= submit "Grab a table", class: "btn btn-lg btn-info" %>
   </div>
 <% end %>

@@ -1,21 +1,23 @@
-<h2>Listing tables</h2>
+<div>
+  <h2>Listing tables</h2>
 
-<table class="table">
-  <thead>
-    <tr>
+  <table class="table">
+    <thead>
+      <tr>
 
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for table <- @tables do %>
-    <tr>
-    <td>
-      <%= link obfuscate(table), to: table_path(@conn, :show, obfuscate(table)) %>
-    </td>
-    </tr>
-<% end %>
-  </tbody>
-</table>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for table <- @tables do %>
+      <tr>
+        <td>
+          <%= link obfuscate(table), to: table_path(@conn, :show, obfuscate(table)) %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
 
-<%= link "New table", to: table_path(@conn, :new), class: "btn btn-primary" %>
+  <%= link "New table", to: table_path(@conn, :new), class: "btn btn-primary" %>
+</div>
