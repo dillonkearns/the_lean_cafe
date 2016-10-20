@@ -14,8 +14,6 @@ function joinChannel(channel) {
   })
 
   channel.on("topics", payload => {
-    console.log("::::::::topics");
-    console.log(payload);
     if (payload.pollClosed) {
       closePoll()
     }
