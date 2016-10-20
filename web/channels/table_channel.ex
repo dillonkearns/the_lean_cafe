@@ -1,5 +1,6 @@
 defmodule TheLeanCafe.TableChannel do
   use Phoenix.Channel
+  alias TheLeanCafe.Presence
 
   intercept ["new_topic", "topics", "close_poll"]
 
@@ -22,7 +23,25 @@ defmodule TheLeanCafe.TableChannel do
     Phoenix.View.render_to_string(TheLeanCafe.TopicView, "index.html", topics_and_dot_votes: topics_and_dot_votes)
   end
 
+  def track_new_user(socket) do
+    Presence.track(socket, socket.assigns.username, %{
+      joined_at: :os.system_time(:milli_seconds)
+    })
+    broadcast_users(socket)
+  end
+
+  def connected_users(socket) do
+    socket
+    |> Presence.list
+    |> Map.keys
+  end
+
+  def broadcast_users(socket) do
+    broadcast! socket, "users", %{users: connected_users(socket)}
+  end
+
   def handle_info({:after_join, _params}, socket = %{topic: "table:" <> table_hashid}) do
+    track_new_user(socket)
     push socket, "topics", topics_payload(table_hashid)
     {:noreply, socket}
   end

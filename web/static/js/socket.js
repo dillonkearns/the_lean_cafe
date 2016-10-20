@@ -14,6 +14,11 @@ function joinChannel(channel) {
     addTopic(payload.body)
   })
 
+  channel.on("users", payload => {
+    console.log("users:")
+    console.log(payload.users)
+  })
+
   channel.on("topics", payload => {
     if (payload.pollClosed) {
       closePoll()
