@@ -26,6 +26,7 @@
           <span class="input-group-addon" id="basic-addon1">@</span>
           <input type="text" class="form-control" placeholder="Your Username" id="username-input">
         </div>
+        <ul id="usernames" style="list-style: none;"></ul>
 
       </div>
 

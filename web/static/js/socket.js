@@ -9,16 +9,18 @@ function createChannel(username) {
   return socket.channel(`table:${roomHash()}`, {})
 }
 
+function myUsername() {
+  return $('#username-input').val() || "anonymous"
+}
+
 function joinChannel(channel) {
   channel.on("new_topic", payload => {
     addTopic(payload.body)
   })
 
   channel.on("users", payload => {
-    let currentUsername = $('#username-input').val()
-    let otherUsers = payload.users.filter(username => username !== currentUsername)
-    console.log("users:")
-    console.log(otherUsers)
+    let otherUsers = payload.users.filter(username => username !== myUsername())
+    renderUsernames(otherUsers)
   })
 
   channel.on("topics", payload => {
@@ -34,10 +36,7 @@ function joinChannel(channel) {
     .receive("error", resp => { console.log("Unable to join", resp) })
 }
 
-function getUsername() {
-  return "anonymous"
-}
-let channel = createChannel(getUsername())
+let channel = createChannel(myUsername())
 joinChannel(channel)
 
 function reconnectAs(username) {
@@ -55,6 +54,14 @@ let pollClosed = false
 $('#username-input').change(function () {
   reconnectAs($('#username-input').val())
 })
+
+function usernamesHtml(usernames) {
+  return usernames.map(username => `<li>@${username}</li>`).join('')
+}
+
+function renderUsernames(usernames) {
+  $('#usernames').html(usernamesHtml(usernames))
+}
 
 function submitTopic() {
   channel.push("new_topic", {body: chatInput.value})
