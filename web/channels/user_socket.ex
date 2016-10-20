@@ -19,10 +19,16 @@ defmodule TheLeanCafe.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    {:ok, socket}
+
+  def connect(%{"username" => username, "table_hash" => table_hash}, socket) do
+    # user_id = "#{table_hash}:#{username}"
+    {:ok, assign(socket, :username, username)}
   end
 
+  def connect(params, socket) do
+    username = "anonymous"
+    {:ok, assign(socket, :username, username)}
+  end
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #
   #     def id(socket), do: "users_socket:#{socket.assigns.user_id}"
