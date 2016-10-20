@@ -1,1 +1,30 @@
-/* This file is for your main application css. */
+.cafebg {
+  background: url('https://images.unsplash.com/5/unsplash-bonus.jpg?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&s=13cb0047f0acd3404ba9e5294276b397') no-repeat center center fixed;
+  background-size: cover;
+}
+
+main {
+}
+
+main > div {
+  padding-left: 60px;
+}
+
+html, body, .container {
+  height:100%;
+}
+
+.fill {
+  min-height: 100%;
+  height: 100%;
+}
+
+.container-fluid {
+  margin: 0 auto;
+  height: 100%;
+  padding: 20px 0;
+
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}

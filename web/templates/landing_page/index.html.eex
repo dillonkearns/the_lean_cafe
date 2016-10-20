@@ -1,1 +1,5 @@
-<%= link "Grab a table", to: table_path(@conn, :new), class: "btn btn-primary" %>
+<div class="cafebg container-fluid" style="display: flex; align-items: center; justify-content: center;">
+  <div>
+    <%= link "Grab a table", to: table_path(@conn, :new), class: "btn btn-lg btn-info" %>
+  </div>
+</div>

@@ -1,13 +1,16 @@
-<h3>Topics</h3>
-<ul id="topics" style="list-style: none;">
+<div>
 
-</ul>
-<div class="topic-input">
-  <input id="topic-input" type="text"></input>
-  <a id="close-poll" class="btn btn-primary">Close Poll</a>
+  <h3>Topics</h3>
+  <ul id="topics" style="list-style: none;">
+
+  </ul>
+  <div class="topic-input">
+    <input id="topic-input" type="text"></input>
+    <a id="close-poll" class="btn btn-primary">Close Poll</a>
+  </div>
+
+  <%= link "Edit", to: table_path(@conn, :edit, @table) %>
+  <%= link "Back", to: table_path(@conn, :index) %>
+
+  <input type="hidden" name="table-id" id="table-id" value="<%= obfuscate(@table) %>">
 </div>
-
-<%= link "Edit", to: table_path(@conn, :edit, @table) %>
-<%= link "Back", to: table_path(@conn, :index) %>
-
-<input type="hidden" name="table-id" id="table-id" value="<%= obfuscate(@table) %>">

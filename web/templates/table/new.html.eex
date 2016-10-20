@@ -1,6 +1,10 @@
-<h2>New table</h2>
+<div>
 
-<%= render "form.html", changeset: @changeset,
-                        action: table_path(@conn, :create) %>
+  <h2>New table</h2>
 
-<%= link "Back", to: table_path(@conn, :index) %>
+  <%= render "form.html", changeset: @changeset,
+  action: table_path(@conn, :create) %>
+
+  <%= link "Back", to: table_path(@conn, :index) %>
+
+</div>
