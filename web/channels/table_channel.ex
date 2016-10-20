@@ -4,6 +4,7 @@ defmodule TheLeanCafe.TableChannel do
   intercept ["new_topic", "topics", "close_poll"]
 
   def join("table:" <> _room_name, params, socket) do
+    IO.puts "username = #{socket.assigns.username}"
     send(self, {:after_join, params})
     {:ok, socket}
   end

@@ -1,21 +1,28 @@
 <div>
 
+  <div class="input-group col-sm-2 col-lg-1">
+    <span class="input-group-addon" id="basic-addon1">@</span>
+    <input type="text" class="form-control" placeholder="Username" id="username-input">
+  </div>
+
   <h3>Topics</h3>
+
+
   <ul id="topics" style="list-style: none;">
 
   </ul>
   <div class="topic-input row">
 
     <div class="col-sm-6 col-lg-4">
-    <form id="topic-input-form" >
-      <div class=" input-group topic-input-form">
-        <input type="text" id="topic-input" class="form-control" placeholder="I want to discuss...">
-        <span class="input-group-btn">
-          <input id="add-topic-button" class="btn btn-default" type="submit">Add Topic</input>
-        </span>
-      </div>
-    </form>
-  </div>
+      <form id="topic-input-form" >
+        <div class=" input-group topic-input-form">
+          <input type="text" id="topic-input" class="form-control" placeholder="I want to discuss...">
+          <span class="input-group-btn">
+            <input id="add-topic-button" class="btn btn-default" type="submit">Add Topic</input>
+          </span>
+        </div>
+      </form>
+    </div>
 
   </div>
 
