@@ -6,7 +6,7 @@
 import {Socket} from "phoenix"
 import $ from "jquery"
 
-let socket = new Socket("/socket", {params: {token: window.userToken}})
+let socket = new Socket("/socket", {params: {username: "dillon123", table_hash: roomHash()}})
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
@@ -52,8 +52,7 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 // Finally, pass the token on connect as below. Or remove it
 // from connect if you don't care about authentication.
 
-socket.connect({username: "dillon123", table_hash: roomHash()})
-
+socket.connect()
 // Now that you are connected, you can join channels with a topic:
 let channel = socket.channel(`table:${roomHash()}`, {})
 let chatInput = document.querySelector("#topic-input")
