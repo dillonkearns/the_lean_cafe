@@ -1,10 +1,11 @@
 import {Socket} from "phoenix"
 import $ from "jquery"
 
+let socket
+
 function createChannel(username) {
-  let socket = new Socket("/socket", {params: {username: username, table_hash: roomHash()}})
+  socket = new Socket("/socket", {params: {username: username, table_hash: roomHash()}})
   socket.connect()
-  window.socket = socket
   return socket.channel(`table:${roomHash()}`, {})
 }
 
@@ -26,8 +27,6 @@ function joinChannel(channel) {
     .receive("error", resp => { console.log("Unable to join", resp) })
 }
 
-window.createChannel = createChannel
-window.joinChannel = joinChannel
 function getUsername() {
   return "anonymous"
 }
@@ -39,9 +38,6 @@ function reconnectAs(username) {
   channel = createChannel(username)
   joinChannel(channel)
 }
-
-window.reconnectAs = reconnectAs
-
 
 let chatInput = document.querySelector("#topic-input")
 let messagesContainer = document.querySelector("#topics")
