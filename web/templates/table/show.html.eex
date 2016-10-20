@@ -4,16 +4,18 @@
   <ul id="topics" style="list-style: none;">
 
   </ul>
-  <div class="topic-input">
+  <div class="topic-input row">
 
-    <div class="row">
-      <div class="col-lg-3 input-group topic-input-form">
+    <div class="col-sm-6 col-lg-4">
+    <form id="topic-input-form" >
+      <div class=" input-group topic-input-form">
         <input type="text" id="topic-input" class="form-control" placeholder="I want to discuss...">
         <span class="input-group-btn">
-          <button id="add-topic-button" class="btn btn-default" type="button">Add Topic</button>
+          <input id="add-topic-button" class="btn btn-default" type="submit">Add Topic</input>
         </span>
       </div>
-    </div>
+    </form>
+  </div>
 
   </div>
 

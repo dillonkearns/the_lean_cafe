@@ -68,11 +68,11 @@ function submitTopic() {
   chatInput.value = ""
 }
 
-chatInput.addEventListener("keypress", event => {
-  if (event.keyCode === 13) {
+$('#topic-input-form').submit(function(ev) {
+    ev.preventDefault()
     submitTopic()
-  }
-})
+    $('#topic-input').focus()
+});
 
 closePollButton.onclick = function () {
   channel.push("close_poll", {})
