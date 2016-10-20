@@ -15,8 +15,10 @@ function joinChannel(channel) {
   })
 
   channel.on("users", payload => {
+    let currentUsername = $('#username-input').val()
+    let otherUsers = payload.users.filter(username => username !== currentUsername)
     console.log("users:")
-    console.log(payload.users)
+    console.log(otherUsers)
   })
 
   channel.on("topics", payload => {
