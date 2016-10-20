@@ -25,7 +25,7 @@ defmodule TheLeanCafe.TableControllerTest do
     table = Repo.insert! %Table{}
     %Table{id: table_id} = table
     conn = get conn, table_path(conn, :show, Obfuscator.encode(table_id))
-    assert html_response(conn, 200) =~ "Show table"
+    assert html_response(conn, 200) =~ "Topics"
   end
 
   test "renders page not found when id is nonexistent", %{conn: conn} do
