@@ -81,7 +81,7 @@ function renderVote(vote) {
   } else {
     return ''
   }
-  return `<span class="glyphicon ${icon}">`
+  return `<span class="glyphicon ${icon}" />`
 }
 
 function usernamesHtml(usernames) {
