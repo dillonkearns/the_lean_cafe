@@ -29,15 +29,24 @@ defmodule TheLeanCafe.TableChannel do
     broadcast_users(socket)
   end
 
-  def count_vote(socket, vote) do
-    Presence.update(socket, socket.assigns.username, %{last_vote: vote})
+  def clear_votes(socket = %{topic: "table:" <> table_hashid}) do
+    TheLeanCafe.Table.reset_roman_vote(TheLeanCafe.Table.get_by_hashid(table_hashid))
     broadcast_users(socket)
   end
 
-  def connected_users(socket) do
+  def count_vote(socket = %{topic: "table:" <> table_hashid}, vote) do
+    table_id = Obfuscator.decode(table_hashid)
+    current_roman_timestamp = TheLeanCafe.Table.current_roman_timestamp(table_id)
+    Presence.update(socket, socket.assigns.username, %{last_vote: [current_roman_timestamp, vote]})
+    broadcast_users(socket)
+  end
+
+  def connected_users(socket = %{topic: "table:" <> table_hashid}) do
+    table_id = Obfuscator.decode(table_hashid)
+    current_roman_timestamp = TheLeanCafe.Table.current_roman_timestamp(table_id)
     socket
     |> Presence.list
-    |> TheLeanCafe.RomanCounter.users_to_json
+    |> TheLeanCafe.RomanCounter.users_to_json(current_roman_timestamp)
   end
 
   def topics_payload(table_hashid) do
@@ -82,6 +91,11 @@ defmodule TheLeanCafe.TableChannel do
 
   def handle_in("vote", %{"vote" => vote}, socket) do
     count_vote(socket, vote)
+    {:reply, :ok, socket}
+  end
+
+  def handle_in("clear_votes", _params, socket) do
+    clear_votes(socket)
     {:reply, :ok, socket}
   end
 

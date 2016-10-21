@@ -72,6 +72,11 @@ function vote(voteType) {
   channel.push('vote', {vote: voteType})
 }
 
+function clearVotes() {
+  channel.push('clear_votes')
+}
+
+window.clearVotes = clearVotes
 window.vote = vote
 
 $('#topic-input-form').submit(function(ev) {

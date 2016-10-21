@@ -36,6 +36,10 @@
       </div>
 
       <div style="padding-top: 50px;" class="topic-input-form">
+        <a id="clear-votes" onclick="clearVotes()" class="btn btn-warning">Clear Votes</a>
+      </div>
+
+      <div style="padding-top: 50px;" class="topic-input-form">
         <a id="close-poll" class="btn btn-danger">Close Poll</a>
       </div>
 
