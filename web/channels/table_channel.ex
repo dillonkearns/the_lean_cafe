@@ -89,7 +89,7 @@ defmodule TheLeanCafe.TableChannel do
     {:reply, :ok, socket}
   end
 
-  def handle_in("vote", %{"vote" => vote}, socket) do
+  def handle_in("roman_vote", %{"vote" => vote}, socket) do
     count_vote(socket, vote)
     {:reply, :ok, socket}
   end

@@ -98,7 +98,7 @@ function submitTopic() {
 }
 
 function vote(voteType) {
-  channel.push('vote', {vote: voteType})
+  channel.push('roman_vote', {vote: voteType})
 }
 
 function clearVotes() {
