@@ -55,8 +55,22 @@ $('#username-input').change(function () {
   reconnectAs($('#username-input').val())
 })
 
+function renderVote(vote) {
+  let icon
+  if (vote === '+') {
+    icon = 'glyphicon-thumbs-up'
+  } else if (vote === '=') {
+    icon = 'glyphicon-hand-left'
+  } else if (vote === '-') {
+    icon = 'glyphicon-thumbs-down'
+  } else {
+    return ''
+  }
+  return `<span class="glyphicon ${icon}">`
+}
+
 function usernamesHtml(usernames) {
-  return usernames.map(user => `<li>${user.last_vote} @${user.username}</li>`).join('')
+  return usernames.map(user => `<li>${renderVote(user.last_vote)} @${user.username}</li>`).join('')
 }
 
 function renderUsernames(usernames) {

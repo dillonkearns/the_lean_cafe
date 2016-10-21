@@ -22,9 +22,10 @@
     <div class="col-sm-3">
       <div class="row">
         <div class="btn-group column" role="group" id="roman-buttons">
-          <button class="btn-default col-sm-4" onclick="vote('+')">+</button>
-          <button class="btn-default col-sm-4" onclick="vote('=')">=</button>
-          <button class="btn-default col-sm-4" onclick="vote('-')">-</button>
+
+          <button class="btn-default col-sm-4" onclick="vote('+')"><span class="glyphicon glyphicon-thumbs-up"></span></button>
+          <button class="btn-default col-sm-4" onclick="vote('=')"><span class="glyphicon glyphicon-hand-left"></span></button>
+          <button class="btn-default col-sm-4" onclick="vote('-')"><span class="glyphicon glyphicon-thumbs-down"></span></button>
         </div>
 
         <div class="input-group" style="max-width: 160px">
