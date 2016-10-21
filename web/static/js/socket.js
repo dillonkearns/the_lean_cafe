@@ -112,9 +112,9 @@ function roomHash() {
   return document.querySelector("#table-id").value
 }
 
-window.romanVote = function (id) {
+window.dotVote = function (id) {
   if (!pollClosed) {
-    channel.push("roman_vote", {topic_id: id})
+    channel.push("dot_vote", {topic_id: id})
   }
 }
 
