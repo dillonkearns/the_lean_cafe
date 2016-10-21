@@ -5,7 +5,6 @@ defmodule TheLeanCafe.TableChannel do
   intercept ["new_topic", "topics", "close_poll"]
 
   def join("table:" <> _room_name, params, socket) do
-    IO.puts "username = #{socket.assigns.username}"
     send(self, {:after_join, params})
     {:ok, socket}
   end
@@ -41,6 +40,12 @@ defmodule TheLeanCafe.TableChannel do
     |> TheLeanCafe.RomanCounter.users_to_json
   end
 
+  def topics_payload(table_hashid) do
+    table_id = Obfuscator.decode(table_hashid)
+    table = TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id)
+    %{topics: topics(table_hashid), pollClosed: table.poll_closed}
+  end
+
   def broadcast_users(socket) do
     broadcast! socket, "users", %{users: connected_users(socket)}
   end
@@ -66,11 +71,6 @@ defmodule TheLeanCafe.TableChannel do
     {:noreply, socket}
   end
 
-  def topics_payload(table_hashid) do
-    table_id = Obfuscator.decode(table_hashid)
-    table = TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id)
-    %{topics: topics(table_hashid), pollClosed: table.poll_closed}
-  end
 
   def handle_in("new_topic", %{"body" => body}, socket = %{topic: "table:" <> table_hashid}) do
     table_id = Obfuscator.decode(table_hashid)
@@ -80,7 +80,7 @@ defmodule TheLeanCafe.TableChannel do
     {:reply, :ok, socket}
   end
 
-  def handle_in("vote", %{"vote" => vote}, socket = %{assigns: %{username: username}, topic: "table:" <> table_hashid}) do
+  def handle_in("vote", %{"vote" => vote}, socket) do
     count_vote(socket, vote)
     {:reply, :ok, socket}
   end
