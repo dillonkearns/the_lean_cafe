@@ -13,12 +13,27 @@ function myUsername() {
   return $('#username-input').val() || "anonymous"
 }
 
+function highlightMyVote(lastVote) {
+    $('.roman-vote-button').removeClass('highlight')
+    let voteClass
+    if (lastVote === '+') {
+      voteClass = 'up'
+    } else if (lastVote === '=') {
+      voteClass = 'side'
+    } else if (lastVote === '-') {
+      voteClass = 'down'
+    }
+    $(`#vote-${voteClass}`).addClass('highlight')
+}
+
 function joinChannel(channel) {
   channel.on("new_topic", payload => {
     addTopic(payload.body)
   })
 
   channel.on("users", payload => {
+    let thisUser = payload.users.find(user => user.username === myUsername())
+    highlightMyVote(thisUser.last_vote)
     let otherUsers = payload.users.filter(user => user.username !== myUsername())
     renderUsernames(otherUsers)
   })

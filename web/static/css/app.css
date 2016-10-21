@@ -16,6 +16,12 @@
   font-size: 20px;
 }
 
+.highlight, .highlight:active, .highlight:focus, .highlight:hover {
+  color: rgba(196, 77, 0, 1);
+  background-color: rgba(0, 172, 255, 1);
+  outline: none;
+}
+
 main {
 }
 
