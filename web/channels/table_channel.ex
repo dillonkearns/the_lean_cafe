@@ -34,10 +34,22 @@ defmodule TheLeanCafe.TableChannel do
     broadcast_users(socket)
   end
 
+  def broadcast_roman_result(socket, result) do
+    broadcast! socket, "roman_result", %{result: result}
+  end
+
   def count_vote(socket = %{topic: "table:" <> table_hashid}, vote) do
     table_id = Obfuscator.decode(table_hashid)
     current_roman_timestamp = TheLeanCafe.Table.current_roman_timestamp(table_id)
     Presence.update(socket, socket.assigns.username, %{last_vote: [current_roman_timestamp, vote]})
+
+    roman_result = Presence.list(socket)
+    |> TheLeanCafe.RomanCounter.result(current_roman_timestamp)
+
+    if roman_result != :inconclusive do
+      broadcast_roman_result(socket, roman_result)
+      TheLeanCafe.Table.reset_roman_vote(TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id))
+    end
     broadcast_users(socket)
   end
 

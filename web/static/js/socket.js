@@ -1,5 +1,6 @@
 import {Socket} from "phoenix"
 import $ from "jquery"
+import toastr from "toastr"
 
 let socket
 
@@ -44,6 +45,13 @@ function joinChannel(channel) {
     }
     $(`#topics`).empty()
     $(`#topics`).append(payload.topics)
+  })
+
+  channel.on('roman_result', payload => {
+    toastr.options.escapeHtml = true
+    toastr.options.closeHtml = `<button>${renderVote(payload.result)}</button>`
+    toastr.options.closeButton = true
+    toastr.info('', 'Roman Vote Results')
   })
 
   channel.join()

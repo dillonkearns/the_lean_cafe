@@ -9,6 +9,7 @@
 
     <title>Welcome to The Lean Cafe!</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.css">
   </head>
 
   <body>
