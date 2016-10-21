@@ -1,6 +1,6 @@
 defmodule TheLeanCafe.RomanCounter do
 
-  def count_meta({_, %{metas: [%{last_vote: [roman_timestamp, vote]}]}}, roman_timestamp) do
+  defp count_meta({_, %{metas: [%{last_vote: [roman_timestamp, vote]}]}}, roman_timestamp) do
     case vote do
       "+" -> 1
       "-" -> -1
@@ -8,7 +8,7 @@ defmodule TheLeanCafe.RomanCounter do
     end
   end
 
-  def count_meta(_, _) do
+  defp count_meta(_, _) do
     0
   end
 
@@ -18,11 +18,25 @@ defmodule TheLeanCafe.RomanCounter do
     |> Enum.sum
   end
 
-  def user_to_json({username, %{metas: [%{last_vote: [roman_timestamp, vote]}]}}, roman_timestamp) do
+  defp count_outstanding({_, %{metas: [%{last_vote: [roman_timestamp, _vote]}]}}, roman_timestamp) do
+    0
+  end
+
+  defp count_outstanding(_, _) do
+    1
+  end
+
+  def outstanding(presence_list, roman_timestamp) do
+    presence_list
+    |> Enum.map(&(count_outstanding(&1, roman_timestamp)))
+    |> Enum.sum
+  end
+
+  defp user_to_json({username, %{metas: [%{last_vote: [roman_timestamp, vote]}]}}, roman_timestamp) do
     %{username: username, last_vote: vote}
   end
 
-  def user_to_json({username, _}, _) do
+  defp user_to_json({username, _}, _) do
     %{username: username, last_vote: ""}
   end
 
