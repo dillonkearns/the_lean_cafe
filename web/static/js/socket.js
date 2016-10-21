@@ -68,8 +68,8 @@ function submitTopic() {
   chatInput.value = ""
 }
 
-function vote() {
-  channel.push("vote", {vote: '+'})
+function vote(voteType) {
+  channel.push('vote', {vote: voteType})
 }
 
 window.vote = vote
