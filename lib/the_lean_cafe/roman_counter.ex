@@ -45,4 +45,21 @@ defmodule TheLeanCafe.RomanCounter do
     |> Enum.map(&(user_to_json(&1, roman_timestamp)))
   end
 
+  defp conclusive?(value, outstanding) do
+    outstanding > abs(value)
+  end
+
+  def result(presence_list, roman_timestamp) do
+    vote_value = value(presence_list, roman_timestamp)
+    outstanding_count = outstanding(presence_list, roman_timestamp)
+    if conclusive?(vote_value, outstanding_count) do
+      :inconclusive
+    else
+      case vote_value do
+        n when n > 0 -> :+
+        n when n <= 0 -> :-
+      end
+    end
+  end
+
 end

@@ -48,4 +48,111 @@ defmodule TheLeanCafe.RomanCounterTest do
       ]
   end
 
+  test "result is upvote" do
+    presence_list = %{
+      "fred" => %{metas: [%{last_vote: [12345, "+"]}]},
+      "wilma" => %{metas: [%{last_vote: [12345, "+"]}]}
+    }
+    assert RomanCounter.result(presence_list, 12345) == :+
+  end
+
+  test "result single user" do
+    presence_list = %{
+      "wilma" => %{metas: [%{last_vote: [12345, "+"]}]}
+    }
+    assert RomanCounter.result(presence_list, 12345) == :+
+  end
+
+  test "result downvote" do
+    presence_list = %{
+      "fred" => %{metas: [%{last_vote: [12345, "-"]}]},
+      "wilma" => %{metas: [%{last_vote: [12345, "-"]}]}
+    }
+    assert RomanCounter.result(presence_list, 12345) == :-
+  end
+
+  test "result tie" do
+    presence_list = %{
+      "fred" => %{metas: [%{last_vote: [12345, "="]}]},
+      "wilma" => %{metas: [%{last_vote: [12345, "="]}]}
+    }
+    assert RomanCounter.result(presence_list, 12345) == :-
+  end
+
+  test "all outstanding" do
+    presence_list = %{
+      "fred" => %{metas: []},
+      "wilma" => %{metas: []},
+      "barney" => %{metas: []},
+    }
+    assert RomanCounter.outstanding(presence_list, 12345) == 3
+  end
+
+  test "some outstanding" do
+    presence_list = %{
+      "fred" => %{metas: [%{last_vote: [12345, "="]}]},
+      "wilma" => %{metas: []},
+      "barney" => %{metas: []},
+    }
+    assert RomanCounter.outstanding(presence_list, 12345) == 2
+  end
+
+  test "result all outstanding" do
+    presence_list = %{
+      "fred" => %{metas: []},
+      "wilma" => %{metas: []},
+      "barney" => %{metas: []},
+    }
+    assert RomanCounter.result(presence_list, 12345) == :inconclusive
+  end
+
+  test "result insufficient votes" do
+    presence_list = %{
+      "fred" => %{metas: [%{last_vote: [12345, "+"]}]},
+      "wilma" => %{metas: []},
+      "barney" => %{metas: []},
+    }
+    assert RomanCounter.result(presence_list, 12345) == :inconclusive
+  end
+
+  test "result tie with one outstanding" do
+    presence_list = %{
+      "fred" => %{metas: [%{last_vote: [12345, "+"]}]},
+      "wilma" => %{metas: []},
+      "barney" => %{metas: [%{last_vote: [12345, "-"]}]},
+    }
+    assert RomanCounter.result(presence_list, 12345) == :inconclusive
+  end
+
+  test "result with not enough outstanding to change outcome" do
+    presence_list = %{
+      "fred" => %{metas: [%{last_vote: [12345, "+"]}]},
+      "wilma" => %{metas: []},
+      "barney" => %{metas: [%{last_vote: [12345, "+"]}]},
+    }
+    assert RomanCounter.result(presence_list, 12345) == :+
+  end
+
+  test "result with enough outstanding to change outcome" do
+    presence_list = %{
+      "fred" => %{metas: [%{last_vote: [12345, "+"]}]},
+      "wilma" => %{metas: []},
+      "pebbles" => %{metas: []},
+      "betty" => %{metas: []},
+      "barney" => %{metas: [%{last_vote: [12345, "+"]}]},
+    }
+    assert RomanCounter.result(presence_list, 12345) == :inconclusive
+  end
+
+  test "result with enough outstanding to tie outcome" do
+    presence_list = %{
+      "fred" => %{metas: [%{last_vote: [12345, "+"]}]},
+      "wilma" => %{metas: []},
+      "betty" => %{metas: []},
+      "barney" => %{metas: [%{last_vote: [12345, "+"]}]},
+    }
+    # TODO: should this be `:inconclusive`?
+    assert RomanCounter.result(presence_list, 12345) == :+
+  end
+
 end
