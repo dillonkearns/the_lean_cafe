@@ -14,4 +14,17 @@ defmodule TheLeanCafe.RomanCounter do
     |> Enum.sum
   end
 
+  def user_to_json({username, %{metas: [%{last_vote: vote}]}}) do
+    %{username: username, last_vote: vote}
+  end
+
+  def user_to_json({username, _}) do
+    %{username: username, last_vote: ""}
+  end
+
+  def users_to_json(presence_list) do
+    presence_list
+    |> Enum.map(&user_to_json/1)
+  end
+
 end

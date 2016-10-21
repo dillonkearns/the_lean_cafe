@@ -26,4 +26,20 @@ defmodule TheLeanCafe.RomanCounterTest do
     assert TheLeanCafe.RomanCounter.value(presence_list) == 2
   end
 
+  test "users to json" do
+    presence_list = %{
+      "fred" => %{metas: [%{last_vote: "+"}]},
+      "wilma" => %{metas: [%{last_vote: "+"}]},
+      "barney" => %{metas: [%{last_vote: "="}]},
+      "betty" => %{metas: [%{}]},
+    }
+    assert TheLeanCafe.RomanCounter.users_to_json(presence_list) ==
+      [
+        %{username: "barney", last_vote: "="},
+        %{username: "betty", last_vote: ""},
+        %{username: "fred", last_vote: "+"},
+        %{username: "wilma", last_vote: "+"},
+      ]
+  end
+
 end

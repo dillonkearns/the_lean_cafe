@@ -19,7 +19,7 @@ function joinChannel(channel) {
   })
 
   channel.on("users", payload => {
-    let otherUsers = payload.users.filter(username => username !== myUsername())
+    let otherUsers = payload.users.filter(user => user.username !== myUsername())
     renderUsernames(otherUsers)
   })
 
@@ -56,7 +56,7 @@ $('#username-input').change(function () {
 })
 
 function usernamesHtml(usernames) {
-  return usernames.map(username => `<li>@${username}</li>`).join('')
+  return usernames.map(user => `<li>${user.last_vote} @${user.username}</li>`).join('')
 }
 
 function renderUsernames(usernames) {
@@ -67,6 +67,12 @@ function submitTopic() {
   channel.push("new_topic", {body: chatInput.value})
   chatInput.value = ""
 }
+
+function vote() {
+  channel.push("vote", {vote: '+'})
+}
+
+window.vote = vote
 
 $('#topic-input-form').submit(function(ev) {
     ev.preventDefault()

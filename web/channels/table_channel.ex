@@ -30,10 +30,15 @@ defmodule TheLeanCafe.TableChannel do
     broadcast_users(socket)
   end
 
+  def count_vote(socket, vote) do
+    Presence.update(socket, socket.assigns.username, %{last_vote: vote})
+    broadcast_users(socket)
+  end
+
   def connected_users(socket) do
     socket
     |> Presence.list
-    |> Map.keys
+    |> TheLeanCafe.RomanCounter.users_to_json
   end
 
   def broadcast_users(socket) do
@@ -72,6 +77,11 @@ defmodule TheLeanCafe.TableChannel do
     topic = %TheLeanCafe.Topic{table_id: table_id, name: body}
     TheLeanCafe.Repo.insert!(topic)
     broadcast! socket, "topics", topics_payload(table_hashid)
+    {:reply, :ok, socket}
+  end
+
+  def handle_in("vote", %{"vote" => vote}, socket = %{assigns: %{username: username}, topic: "table:" <> table_hashid}) do
+    count_vote(socket, vote)
     {:reply, :ok, socket}
   end
 
