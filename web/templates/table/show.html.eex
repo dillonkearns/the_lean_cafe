@@ -44,6 +44,10 @@
         <a id="close-poll" class="btn btn-danger">Close Poll</a>
       </div>
 
+      <div style="padding-top: 50px;" class="current-topic-form">
+        <a id="close-topic" class="btn btn-danger">Close Topic</a>
+      </div>
+
     </div>
   </div>
 

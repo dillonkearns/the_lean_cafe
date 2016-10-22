@@ -72,6 +72,7 @@ let chatInput = document.querySelector("#topic-input")
 let messagesContainer = document.querySelector("#topics")
 let closePollButton = document.querySelector("#close-poll")
 let topicInputForm = $(".topic-input-form")
+let currentTopicForm = $(".current-topic-form")
 let pollClosed = false
 
 $('#username-input').change(function () {
@@ -128,6 +129,7 @@ closePollButton.onclick = function () {
 
 function closePoll() {
   $(topicInputForm).hide();
+  $(currentTopicForm).css('visibility', 'visible');
   pollClosed = true
 }
 
