@@ -4,6 +4,7 @@ defmodule TheLeanCafe.Topic do
 
   schema "topics" do
     field :name, :string
+    field :completed, :boolean
     has_many :dot_votes, TheLeanCafe.DotVote
     belongs_to :table, TheLeanCafe.Table
 
