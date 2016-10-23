@@ -1,6 +1,6 @@
 defmodule TheLeanCafe.Table do
   use TheLeanCafe.Web, :model
-  alias TheLeanCafe.{Table, Repo}
+  alias TheLeanCafe.{Table, Repo, Topic}
 
   schema "tables" do
     has_many :topics, TheLeanCafe.Topic
@@ -35,5 +35,9 @@ defmodule TheLeanCafe.Table do
 
   def hashid(%TheLeanCafe.Table{id: id}) do
     Obfuscator.encode(id)
+  end
+
+  def current_topic(table_id) do
+    Repo.get_by(Topic, table_id: table_id)
   end
 end
