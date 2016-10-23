@@ -38,6 +38,6 @@ defmodule TheLeanCafe.Table do
   end
 
   def current_topic(table_id) do
-    Repo.get_by(Topic, table_id: table_id)
+    Repo.get_by(Topic, table_id: table_id, completed: false)
   end
 end
