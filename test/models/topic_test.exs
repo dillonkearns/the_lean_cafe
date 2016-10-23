@@ -1,7 +1,7 @@
 defmodule TheLeanCafe.TopicTest do
   use TheLeanCafe.ModelCase
 
-  alias TheLeanCafe.{Topic, Repo}
+  alias TheLeanCafe.{Topic, Repo, Table}
 
   @valid_attrs %{name: "some content"}
   @invalid_attrs %{}
@@ -51,4 +51,26 @@ defmodule TheLeanCafe.TopicTest do
     topic = Repo.get!(Topic, topic.id)
     assert topic.completed
   end
+
+  test "get current topic with no topics" do
+    table = Repo.insert!(%Table{})
+
+    assert Topic.current(table.id) == nil
+  end
+
+  test "get current topic" do
+    table = Repo.insert!(%Table{})
+    topic = Repo.insert!(%Topic{table: table})
+
+    assert Topic.current(table.id).id == topic.id
+  end
+
+  test "current topic ignores complete topics" do
+    table = Repo.insert!(%Table{})
+    Repo.insert!(%Topic{table: table, completed: true})
+    incomplete_topic = Repo.insert!(%Topic{table: table})
+
+    assert Topic.current(table.id).id == incomplete_topic.id
+  end
+
 end

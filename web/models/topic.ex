@@ -51,4 +51,9 @@ defmodule TheLeanCafe.Topic do
     |> order_by([t], 2)
     |> Repo.all
   end
+
+  def current(table_id) do
+    Repo.get_by(Topic, table_id: table_id, completed: false)
+  end
+
 end

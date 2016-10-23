@@ -3,7 +3,7 @@ defmodule TheLeanCafe.Table do
   alias TheLeanCafe.{Table, Repo, Topic}
 
   schema "tables" do
-    has_many :topics, TheLeanCafe.Topic
+    has_many :topics, Topic
     field :poll_closed, :boolean, default: false
     field :current_roman_timestamp, :integer, default: 0
 
@@ -20,7 +20,7 @@ defmodule TheLeanCafe.Table do
   end
 
   def get_by_hashid(table_hashid) do
-    TheLeanCafe.Repo.get!(TheLeanCafe.Table, Obfuscator.decode(table_hashid))
+    TheLeanCafe.Repo.get!(Table, Obfuscator.decode(table_hashid))
   end
 
   def current_roman_timestamp(id) do
@@ -30,14 +30,11 @@ defmodule TheLeanCafe.Table do
 
   def reset_roman_vote(table) do
     Ecto.Changeset.change(table, %{current_roman_timestamp: :os.system_time(:seconds)})
-    |> TheLeanCafe.Repo.update!
+    |> Repo.update!
   end
 
   def hashid(%TheLeanCafe.Table{id: id}) do
     Obfuscator.encode(id)
   end
 
-  def current_topic(table_id) do
-    Repo.get_by(Topic, table_id: table_id, completed: false)
-  end
 end
