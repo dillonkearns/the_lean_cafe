@@ -43,4 +43,12 @@ defmodule TheLeanCafe.TopicTest do
     topics_and_votes = Topic.sorted_with_vote_counts(table.id)
     assert [{%Topic{name: "Popular Topic"}, 3}, {%Topic{name: "Regular Topic"}, 1}, {%Topic{name: "Unpopular Topic"}, 0}] = topics_and_votes
   end
+
+  test "mark topic as completed by id" do
+    topic = Repo.insert!(%Topic{name: "Coding is cool"})
+    assert !topic.completed
+    Topic.complete!(topic)
+    topic = Repo.get!(Topic, topic.id)
+    assert topic.completed
+  end
 end

@@ -35,6 +35,12 @@ defmodule TheLeanCafe.Topic do
       group_by: t.id
   end
 
+  def complete!(topic) do
+    topic
+    |> Ecto.Changeset.change(%{completed: true})
+    |> TheLeanCafe.Repo.update!
+  end
+
   def with_vote_counts(table_id) do
     TheLeanCafe.Repo.all(vote_counts_query(table_id))
   end
