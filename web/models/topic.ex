@@ -33,16 +33,16 @@ defmodule TheLeanCafe.Topic do
   end
 
   def vote_counts_query(table_id) do
-    from t in TheLeanCafe.Topic,
-      where: t.table_id == ^table_id,
-      left_join: d in assoc(t, :dot_votes),
-      select: {t, count(d.id)},
-      group_by: t.id
+    from topic in TheLeanCafe.Topic,
+      where: topic.table_id == ^table_id,
+      left_join: d in assoc(topic, :dot_votes),
+      select: {topic, count(d.id)},
+      group_by: topic.id
   end
 
   def with_vote_counts(table_id) do
     vote_counts_query(table_id)
-    |> order_by([t], t.id)
+    |> order_by([topic], topic.id)
     |> Repo.all
   end
 
