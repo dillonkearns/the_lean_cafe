@@ -26,29 +26,29 @@ defmodule TheLeanCafe.Topic do
     Repo.insert!(%DotVote{topic_id: id})
   end
 
-  def vote_counts_query(table_id) do
-    from t in TheLeanCafe.Topic,
-      where: t.table_id == ^table_id,
-      order_by: t.id,
-      left_join: d in assoc(t, :dot_votes),
-      select: {t, count(d.id)},
-      group_by: t.id
-  end
-
   def complete!(topic) do
     topic
     |> Ecto.Changeset.change(%{completed: true})
     |> TheLeanCafe.Repo.update!
   end
 
+  def vote_counts_query(table_id) do
+    from t in TheLeanCafe.Topic,
+      where: t.table_id == ^table_id,
+      left_join: d in assoc(t, :dot_votes),
+      select: {t, count(d.id)},
+      group_by: t.id
+  end
+
   def with_vote_counts(table_id) do
-    TheLeanCafe.Repo.all(vote_counts_query(table_id))
+    vote_counts_query(table_id)
+    |> order_by([t], t.id)
+    |> Repo.all
   end
 
   def sorted_with_vote_counts(table_id) do
-    TheLeanCafe.Repo.all(vote_counts_query(table_id))
-    |> Enum.sort_by(&(elem(&1, 1)))
-    |> Enum.reverse
+    vote_counts_query(table_id)
+    |> order_by([t], 2)
+    |> Repo.all
   end
-
 end
