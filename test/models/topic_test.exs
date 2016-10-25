@@ -1,7 +1,7 @@
 defmodule TheLeanCafe.TopicTest do
   use TheLeanCafe.ModelCase
 
-  alias TheLeanCafe.{Topic, Repo, Table}
+  alias TheLeanCafe.{Topic, Repo, Table, DotVote}
 
   @valid_attrs %{name: "some content"}
   @invalid_attrs %{}
@@ -40,7 +40,7 @@ defmodule TheLeanCafe.TopicTest do
     Topic.vote_for!(topic2)
     Topic.vote_for!(topic3)
 
-    topics_and_votes = Topic.sorted_with_vote_counts(table.id)
+    topics_and_votes = Topic.sorted_with_vote_counts(table.id) |> Repo.all
     assert [{%Topic{name: "Popular Topic"}, 3}, {%Topic{name: "Regular Topic"}, 1}, {%Topic{name: "Unpopular Topic"}, 0}] = topics_and_votes
   end
 
@@ -55,14 +55,24 @@ defmodule TheLeanCafe.TopicTest do
   test "get current topic with no topics" do
     table = Repo.insert!(%Table{})
 
-    assert Topic.current(table.id) == nil
+    current = table.id
+    |> Topic.sorted_by_votes_query
+    |> first
+    |> Repo.one
+
+    assert current == nil
   end
 
-  test "get current topic" do
+  test "get current topic with no votes" do
     table = Repo.insert!(%Table{})
     topic = Repo.insert!(%Topic{table: table})
 
-    assert Topic.current(table.id).id == topic.id
+    current = table.id
+    |> Topic.sorted_by_votes_query
+    |> first
+    |> Repo.one
+
+    assert current.id == topic.id
   end
 
   test "current topic ignores complete topics" do
@@ -70,7 +80,27 @@ defmodule TheLeanCafe.TopicTest do
     Repo.insert!(%Topic{table: table, completed: true})
     incomplete_topic = Repo.insert!(%Topic{table: table})
 
-    assert Topic.current(table.id).id == incomplete_topic.id
+    current = table.id
+    |> Topic.sorted_by_votes_query
+    |> first
+    |> Repo.one
+
+    assert current.id == incomplete_topic.id
+  end
+
+  test "current topic with lots of em" do
+    table = Repo.insert!(%Table{})
+    Repo.insert!(%Topic{table: table, completed: true})
+    Repo.insert!(%Topic{table: table})
+    current_topic = Repo.insert!(%Topic{table: table})
+    Repo.insert!(%DotVote{topic: current_topic})
+
+    current = table.id
+    |> Topic.sorted_by_votes_query
+    |> first
+    |> Repo.one
+
+    assert current.id == current_topic.id
   end
 
 end
