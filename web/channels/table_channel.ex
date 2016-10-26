@@ -12,15 +12,10 @@ defmodule TheLeanCafe.TableChannel do
   def topics(table_hashid) do
     table_id = Obfuscator.decode(table_hashid)
     table = Repo.get!(Table, table_id)
-    topics_query =
-      if table.poll_closed do
-        Topic.sorted_by_votes_query(table_id)
-      else
-        Topic.newest_first_query(table_id)
-      end
 
     topics_and_dot_votes =
-      topics_query
+      table
+      |> Table.topics_query
       |> Topic.with_vote_counts
       |> Repo.all
 

@@ -37,4 +37,12 @@ defmodule TheLeanCafe.Table do
     Obfuscator.encode(id)
   end
 
+  def topics_query(%Table{id: id, poll_closed: true}) do
+    Topic.sorted_by_votes_query(id)
+  end
+
+  def topics_query(%Table{id: id}) do
+    Topic.newest_first_query(id)
+  end
+
 end
