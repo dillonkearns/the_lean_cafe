@@ -16,7 +16,7 @@ defmodule TheLeanCafe.TopicTest do
     refute changeset.valid?
   end
 
-  test "get list of tables with dot vote counts" do
+  test "get list of topics with dot vote counts" do
     table = Repo.insert!(%TheLeanCafe.Table{})
     _topic1 = Repo.insert!(%Topic{table_id: table.id, name: "Unpopular Topic"})
     topic2 = Repo.insert!(%Topic{table_id: table.id, name: "Popular Topic"})
