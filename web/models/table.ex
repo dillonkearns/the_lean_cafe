@@ -45,4 +45,11 @@ defmodule TheLeanCafe.Table do
     Topic.newest_first_query(id)
   end
 
+  def current_topic(table) do
+    table
+    |> topics_query
+    |> Topic.incomplete
+    |> first
+  end
+
 end

@@ -96,13 +96,10 @@ defmodule TheLeanCafe.TableChannel do
     table_id = Obfuscator.decode(table_hashid)
     table = Repo.get!(Table, table_id)
 
-    topics_and_dot_votes =
-      table
-      |> Table.topics_query
-      |> Topic.incomplete
-      |> Ecto.Query.first
-      |> Repo.one
-      |> Topic.complete!
+    table
+    |> Table.current_topic
+    |> Repo.one
+    |> Topic.complete!
 
     broadcast! socket, "topics", topics_payload(table_hashid)
     {:noreply, socket}

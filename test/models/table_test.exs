@@ -24,4 +24,16 @@ defmodule TheLeanCafe.TableTest do
     end
   end
 
+  test "current ignores complete topics" do
+    table = Repo.insert!(%Table{})
+    Repo.insert!(%Topic{table: table, completed: true})
+    incomplete_topic = Repo.insert!(%Topic{table: table})
+
+    current = table
+    |> Table.current_topic
+    |> Repo.one
+
+    assert current.id == incomplete_topic.id
+  end
+
 end

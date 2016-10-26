@@ -83,18 +83,6 @@ defmodule TheLeanCafe.TopicTest do
     assert current.id == topic.id
   end
 
-  test "current topic ignores complete topics" do
-    table = Repo.insert!(%Table{})
-    Repo.insert!(%Topic{table: table, completed: true})
-    incomplete_topic = Repo.insert!(%Topic{table: table})
-
-    current = table.id
-    |> Topic.sorted_by_votes_query
-    |> first
-    |> Repo.one
-
-    assert current.id == incomplete_topic.id
-  end
 
   test "current topic with lots of em" do
     table = Repo.insert!(%Table{})
