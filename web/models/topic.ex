@@ -45,19 +45,19 @@ defmodule TheLeanCafe.Topic do
     |> order_by([topic], topic.id)
     |> Repo.all
   end
-  
-  def topics_by_vote(table_id) do
-    from(topic in Topic, join: dv in assoc(topic, :dot_votes), group_by: topic.id) |> where([topic], topic.table_id == ^table_id)
-    |> select([topic, dv], {topic.name, count(dv.id)})
-  end
 
   def with_dot_vote_counts(query) do
     query
     |> select([topic, dv], {topic, count(dv.id)})
   end
 
-  def sorted_by_votes_query(table_id) do
+  def base_query(table_id) do
     from(topic in Topic, left_join: dv in assoc(topic, :dot_votes), group_by: topic.id)
+  end
+
+  def sorted_by_votes_query(table_id) do
+    table_id
+      |> base_query
       |> where([topic], topic.table_id == ^table_id)
       |> order_by([topic, dv], [desc: count(dv.id)])
   end
