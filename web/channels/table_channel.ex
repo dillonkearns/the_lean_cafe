@@ -92,6 +92,20 @@ defmodule TheLeanCafe.TableChannel do
     {:noreply, socket}
   end
 
+  def handle_in("complete_topic", _, socket = %{topic: "table:" <> table_hashid}) do
+    table_id = Obfuscator.decode(table_hashid)
+    table = Repo.get!(Table, table_id)
+
+    topics_and_dot_votes =
+      table
+      |> Table.topics_query
+      |> Ecto.Query.first
+      |> Repo.one
+      |> Topic.complete!
+
+    broadcast! socket, "topics", topics_payload(table_hashid)
+    {:noreply, socket}
+  end
 
   def handle_in("new_topic", %{"body" => body}, socket = %{topic: "table:" <> table_hashid}) do
     table_id = Obfuscator.decode(table_hashid)

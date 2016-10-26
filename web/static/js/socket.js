@@ -127,6 +127,10 @@ closePollButton.onclick = function () {
   channel.push("close_poll", {})
 }
 
+document.querySelector("#complete-topic").onclick = function () {
+  channel.push("complete_topic", {})
+}
+
 function closePoll() {
   $(topicInputForm).hide();
   $(currentTopicForm).css('visibility', 'visible');

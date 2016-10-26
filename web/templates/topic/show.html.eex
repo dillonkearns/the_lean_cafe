@@ -1,1 +1,1 @@
-<li><%= render "vote_button.html", topic: @topic, dot_votes: @dot_votes %><%= @topic.name %></li>
+<li><%= render "vote_button.html", topic: @topic, dot_votes: @dot_votes %><%= @topic.name %> <%= @topic.completed %></li>

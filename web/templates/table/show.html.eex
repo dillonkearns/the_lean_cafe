@@ -45,7 +45,7 @@
       </div>
 
       <div style="padding-top: 50px;" class="current-topic-form">
-        <a id="close-topic" class="btn btn-danger">Close Topic</a>
+        <a id="complete-topic" class="btn btn-danger">Complete Topic</a>
       </div>
 
     </div>
