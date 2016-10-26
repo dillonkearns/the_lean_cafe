@@ -6,7 +6,7 @@ defmodule TheLeanCafe.TopicViewTest do
   test "renders single topic html" do
     topic = %Topic{name: "Some cool topic"}
     assert render_to_string(TopicView, "show.html", topic: topic, dot_votes: 0) =~
-       ~r(<li>.*Some cool topic</li>)s
+       ~r(<li>.*Some cool topic.*</li>)s
   end
 
   test "shows vote button next to topic" do
@@ -26,7 +26,7 @@ defmodule TheLeanCafe.TopicViewTest do
     topic2 = %Topic{id: 124, name: "Another topic"}
     topics_and_dot_votes = [{topic1, 10}, {topic2, 6}]
     assert render_to_string(TopicView, "index.html", topics_and_dot_votes: topics_and_dot_votes) =~
-       ~r/10.*Some cool topic.*6.*Another topic/s
+       ~r/10.*Some cool topic.*6.*Another topic.*/s
   end
 
 end
