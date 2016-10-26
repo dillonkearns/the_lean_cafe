@@ -14,7 +14,7 @@ defmodule TheLeanCafe.TableChannel do
     table = TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id)
     topics_and_dot_votes =
       if table.poll_closed do
-        TheLeanCafe.Topic.sorted_with_vote_counts(table_id)
+        TheLeanCafe.Topic.sorted_with_vote_counts(table_id) |> TheLeanCafe.Repo.all
       else
         TheLeanCafe.Topic.with_vote_counts(table_id)
       end
