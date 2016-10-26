@@ -26,6 +26,8 @@ config :the_lean_cafe, TheLeanCafe.Endpoint,
     ]
   ]
 
+config :mix_test_watch, clear: true
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
