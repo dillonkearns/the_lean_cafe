@@ -26,7 +26,12 @@ defmodule TheLeanCafe.TopicTest do
     Topic.vote_for!(topic2)
     Topic.vote_for!(topic3)
 
-    topics_and_votes = Topic.with_vote_counts(table.id)
+    topics_and_votes =
+      table.id
+      |> Topic.newest_first_query
+      |> Topic.with_vote_counts
+      |> Repo.all
+
     assert [{%Topic{name: "Unpopular Topic"}, 0}, {%Topic{name: "Popular Topic"}, 3}, {%Topic{name: "Regular Topic"}, 1}] = topics_and_votes
   end
 
@@ -40,7 +45,10 @@ defmodule TheLeanCafe.TopicTest do
     Topic.vote_for!(topic2)
     Topic.vote_for!(topic3)
 
-    topics_and_votes = Topic.sorted_with_vote_counts(table.id) |> Repo.all
+    topics_and_votes =
+      Topic.sorted_by_votes_query(table.id)
+      |> Topic.with_vote_counts
+      |> Repo.all
     assert [{%Topic{name: "Popular Topic"}, 3}, {%Topic{name: "Regular Topic"}, 1}, {%Topic{name: "Unpopular Topic"}, 0}] = topics_and_votes
   end
 

@@ -32,14 +32,12 @@ defmodule TheLeanCafe.Topic do
     |> TheLeanCafe.Repo.update!
   end
 
-  def with_vote_counts(table_id) do
+  def newest_first_query(table_id) do
     base_query(table_id)
     |> order_by([topic, dv], [asc: topic.id])
-    |> with_dot_vote_counts
-    |> Repo.all
   end
 
-  def with_dot_vote_counts(query) do
+  def with_vote_counts(query) do
     query
     |> select([topic, dv], {topic, count(dv.id)})
   end
@@ -53,12 +51,6 @@ defmodule TheLeanCafe.Topic do
     table_id
       |> base_query
       |> order_by([topic, dv], [desc: count(dv.id)])
-  end
-
-  def sorted_with_vote_counts(table_id) do
-    table_id
-      |> sorted_by_votes_query
-      |> with_dot_vote_counts
   end
 
 end
