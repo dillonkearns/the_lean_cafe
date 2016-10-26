@@ -26,6 +26,9 @@ defmodule TheLeanCafe.Topic do
     Repo.insert!(%DotVote{topic_id: id})
   end
 
+  def complete!(nil) do
+  end
+
   def complete!(topic) do
     topic
     |> Ecto.Changeset.change(%{completed: true})

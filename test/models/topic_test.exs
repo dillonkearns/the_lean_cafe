@@ -60,6 +60,10 @@ defmodule TheLeanCafe.TopicTest do
     assert topic.completed
   end
 
+  test "complete! does not error out for nil" do
+    Topic.complete!(nil)
+  end
+
   test "get current topic with no topics" do
     table = Repo.insert!(%Table{})
 
