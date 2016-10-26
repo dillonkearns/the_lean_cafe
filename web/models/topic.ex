@@ -32,8 +32,13 @@ defmodule TheLeanCafe.Topic do
     |> TheLeanCafe.Repo.update!
   end
 
-  def newest_first_query(table_id) do
+  def oldest_first_query(table_id) do
     base_query(table_id)
+    |> oldest_first
+  end
+
+  def oldest_first(query) do
+    query
     |> order_by([topic, dv], [asc: topic.id])
   end
 
@@ -56,6 +61,7 @@ defmodule TheLeanCafe.Topic do
     table_id
       |> base_query
       |> order_by([topic, dv], [desc: count(dv.id)])
+      |> oldest_first
   end
 
 end

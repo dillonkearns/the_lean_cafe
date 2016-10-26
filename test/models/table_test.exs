@@ -15,7 +15,7 @@ defmodule TheLeanCafe.TableTest do
 
     test "orders newest first on a new table" do
       table = Repo.insert!(%Table{})
-      assert Table.topics_query(table) == Topic.newest_first_query(table.id)
+      assert Table.topics_query(table) == Topic.oldest_first_query(table.id)
     end
 
     test "orders by vote count after closing poll" do

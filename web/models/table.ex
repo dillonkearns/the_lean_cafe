@@ -42,7 +42,7 @@ defmodule TheLeanCafe.Table do
   end
 
   def topics_query(%Table{id: id}) do
-    Topic.newest_first_query(id)
+    Topic.oldest_first_query(id)
   end
 
   def current_topic(table) do

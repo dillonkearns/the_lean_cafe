@@ -28,7 +28,7 @@ defmodule TheLeanCafe.TopicTest do
 
     topics_and_votes =
       table.id
-      |> Topic.newest_first_query
+      |> Topic.oldest_first_query
       |> Topic.with_vote_counts
       |> Repo.all
 
@@ -83,7 +83,6 @@ defmodule TheLeanCafe.TopicTest do
     assert current.id == topic.id
   end
 
-
   test "current topic with lots of em" do
     table = Repo.insert!(%Table{})
     Repo.insert!(%Topic{table: table, completed: true})
@@ -97,6 +96,28 @@ defmodule TheLeanCafe.TopicTest do
     |> Repo.one
 
     assert current.id == current_topic.id
+  end
+
+  test "break sort ties by oldest first" do
+    table = Repo.insert!(%Table{})
+    oldest = Repo.insert!(%Topic{table: table})
+    middle_no_votes = Repo.insert!(%Topic{table: table})
+    middle_with_votes = Repo.insert!(%Topic{table: table})
+    newest = Repo.insert!(%Topic{table: table})
+    Repo.insert!(%DotVote{topic: middle_with_votes})
+
+    sorted_by_votes = table.id
+    |> Topic.sorted_by_votes_query
+    |> Repo.all
+
+    map_ids = fn(enum) -> Enum.map(enum, &(&1.id)) end
+    expected_order = [
+      middle_with_votes,
+      oldest,
+      middle_no_votes,
+      newest,
+    ]
+    assert map_ids.(sorted_by_votes) == map_ids.(expected_order)
   end
 
 end
