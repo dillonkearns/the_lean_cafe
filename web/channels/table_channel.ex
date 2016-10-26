@@ -1,6 +1,6 @@
 defmodule TheLeanCafe.TableChannel do
   use Phoenix.Channel
-  alias TheLeanCafe.Presence
+  alias TheLeanCafe.{Presence, Table, Topic, DotVote, Repo, TopicView, RomanCounter}
 
   intercept ["new_topic", "topics", "close_poll"]
 
@@ -11,15 +11,15 @@ defmodule TheLeanCafe.TableChannel do
 
   def topics(table_hashid) do
     table_id = Obfuscator.decode(table_hashid)
-    table = TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id)
+    table = Repo.get!(Table, table_id)
     topics_and_dot_votes =
       if table.poll_closed do
-        TheLeanCafe.Topic.sorted_with_vote_counts(table_id) |> TheLeanCafe.Repo.all
+        Topic.sorted_with_vote_counts(table_id) |> Repo.all
       else
-        TheLeanCafe.Topic.with_vote_counts(table_id)
+        Topic.with_vote_counts(table_id)
       end
 
-    Phoenix.View.render_to_string(TheLeanCafe.TopicView, "index.html", topics_and_dot_votes: topics_and_dot_votes)
+    Phoenix.View.render_to_string(TopicView, "index.html", topics_and_dot_votes: topics_and_dot_votes)
   end
 
   def track_new_user(socket) do
@@ -30,7 +30,7 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   def clear_votes(socket = %{topic: "table:" <> table_hashid}) do
-    TheLeanCafe.Table.reset_roman_vote(TheLeanCafe.Table.get_by_hashid(table_hashid))
+    Table.reset_roman_vote(Table.get_by_hashid(table_hashid))
     broadcast_users(socket)
   end
 
@@ -40,30 +40,30 @@ defmodule TheLeanCafe.TableChannel do
 
   def count_vote(socket = %{topic: "table:" <> table_hashid}, vote) do
     table_id = Obfuscator.decode(table_hashid)
-    current_roman_timestamp = TheLeanCafe.Table.current_roman_timestamp(table_id)
+    current_roman_timestamp = Table.current_roman_timestamp(table_id)
     Presence.update(socket, socket.assigns.username, %{last_vote: [current_roman_timestamp, vote]})
 
     roman_result = Presence.list(socket)
-    |> TheLeanCafe.RomanCounter.result(current_roman_timestamp)
+    |> RomanCounter.result(current_roman_timestamp)
 
     if roman_result != :inconclusive do
       broadcast_roman_result(socket, roman_result)
-      TheLeanCafe.Table.reset_roman_vote(TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id))
+      Table.reset_roman_vote(Repo.get!(Table, table_id))
     end
     broadcast_users(socket)
   end
 
   def connected_users(socket = %{topic: "table:" <> table_hashid}) do
     table_id = Obfuscator.decode(table_hashid)
-    current_roman_timestamp = TheLeanCafe.Table.current_roman_timestamp(table_id)
+    current_roman_timestamp = Table.current_roman_timestamp(table_id)
     socket
     |> Presence.list
-    |> TheLeanCafe.RomanCounter.users_to_json(current_roman_timestamp)
+    |> RomanCounter.users_to_json(current_roman_timestamp)
   end
 
   def topics_payload(table_hashid) do
     table_id = Obfuscator.decode(table_hashid)
-    table = TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id)
+    table = Repo.get!(Table, table_id)
     %{topics: topics(table_hashid), pollClosed: table.poll_closed}
   end
 
@@ -78,16 +78,16 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   def handle_in("dot_vote", %{"topic_id" => topic_id}, socket = %{topic: "table:" <> table_hashid}) do
-    TheLeanCafe.Repo.insert!(%TheLeanCafe.DotVote{topic_id: topic_id})
+    Repo.insert!(%DotVote{topic_id: topic_id})
     broadcast! socket, "topics", %{topics: topics(table_hashid)}
     {:noreply, socket}
   end
 
   def handle_in("close_poll", _, socket = %{topic: "table:" <> table_hashid}) do
     table_id = Obfuscator.decode(table_hashid)
-    table = TheLeanCafe.Repo.get!(TheLeanCafe.Table, table_id)
+    table = Repo.get!(Table, table_id)
     change = Ecto.Changeset.change(table, poll_closed: true)
-    TheLeanCafe.Repo.update(change)
+    Repo.update(change)
     broadcast! socket, "topics", topics_payload(table_hashid)
     {:noreply, socket}
   end
@@ -95,8 +95,8 @@ defmodule TheLeanCafe.TableChannel do
 
   def handle_in("new_topic", %{"body" => body}, socket = %{topic: "table:" <> table_hashid}) do
     table_id = Obfuscator.decode(table_hashid)
-    topic = %TheLeanCafe.Topic{table_id: table_id, name: body}
-    TheLeanCafe.Repo.insert!(topic)
+    topic = %Topic{table_id: table_id, name: body}
+    Repo.insert!(topic)
     broadcast! socket, "topics", topics_payload(table_hashid)
     {:reply, :ok, socket}
   end
