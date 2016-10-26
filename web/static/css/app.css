@@ -41,6 +41,11 @@ html, body, .container {
   height: 100%;
 }
 
+.complete {
+  text-decoration: line-through;
+  color: rgba(190, 190, 190, 0.9);
+}
+
 .container-fluid {
   margin: 0 auto;
   height: 100%;

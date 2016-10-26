@@ -1,1 +1,6 @@
-<li><%= render "vote_button.html", topic: @topic, dot_votes: @dot_votes %><%= @topic.name %> <%= @topic.completed %></li>
+<li><%= render "vote_button.html", topic: @topic, dot_votes: @dot_votes %>
+
+  <span class="<%= if @topic.completed, do: "complete" %>">
+    <%= @topic.name %>
+  </span
+</li>
