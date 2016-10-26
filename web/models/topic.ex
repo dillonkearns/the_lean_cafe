@@ -47,6 +47,11 @@ defmodule TheLeanCafe.Topic do
     |> where([topic], topic.table_id == ^table_id)
   end
 
+  def incomplete(query) do
+    query
+    |> where([topic], topic.completed != true)
+  end
+
   def sorted_by_votes_query(table_id) do
     table_id
       |> base_query

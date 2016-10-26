@@ -99,6 +99,7 @@ defmodule TheLeanCafe.TableChannel do
     topics_and_dot_votes =
       table
       |> Table.topics_query
+      |> Topic.incomplete
       |> Ecto.Query.first
       |> Repo.one
       |> Topic.complete!
