@@ -17,11 +17,6 @@ defmodule TheLeanCafe.Topic do
     |> validate_required([:name])
   end
 
-  def dot_vote_count(topic_id) do
-    topic = TheLeanCafe.Repo.get(TheLeanCafe.Topic, topic_id) |> TheLeanCafe.Repo.preload(:dot_votes)
-    length(topic.dot_votes)
-  end
-
   def vote_for(topic_id) do
     %DotVote{topic_id: topic_id}
   end
