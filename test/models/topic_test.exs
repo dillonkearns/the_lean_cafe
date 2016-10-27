@@ -1,7 +1,8 @@
 defmodule TheLeanCafe.TopicTest do
   use TheLeanCafe.ModelCase
+  import TheLeanCafe.Factory
 
-  alias TheLeanCafe.{Topic, Repo, Table, DotVote}
+  alias TheLeanCafe.{Topic, Repo, DotVote}
 
   @valid_attrs %{name: "some content"}
   @invalid_attrs %{}
@@ -17,10 +18,10 @@ defmodule TheLeanCafe.TopicTest do
   end
 
   test "get list of topics with dot vote counts" do
-    table = Repo.insert!(%TheLeanCafe.Table{})
-    _topic1 = Repo.insert!(%Topic{table_id: table.id, name: "Unpopular Topic"})
-    topic2 = Repo.insert!(%Topic{table_id: table.id, name: "Popular Topic"})
-    topic3 = Repo.insert!(%Topic{table_id: table.id, name: "Regular Topic"})
+    table = insert(:table)
+    _topic1 = insert(:topic, table: table, name: "Unpopular Topic")
+    topic2 = insert(:topic, table: table, name: "Popular Topic")
+    topic3 = insert(:topic, table: table, name: "Regular Topic")
     Topic.vote_for!(topic2)
     Topic.vote_for!(topic2)
     Topic.vote_for!(topic2)
@@ -36,10 +37,10 @@ defmodule TheLeanCafe.TopicTest do
   end
 
   test "sort by dot votes" do
-    table = Repo.insert!(%TheLeanCafe.Table{})
-    _topic1 = Repo.insert!(%Topic{table_id: table.id, name: "Unpopular Topic"})
-    topic2 = Repo.insert!(%Topic{table_id: table.id, name: "Popular Topic"})
-    topic3 = Repo.insert!(%Topic{table_id: table.id, name: "Regular Topic"})
+    table = insert(:table)
+    _topic1 = insert(:topic, table: table, name: "Unpopular Topic")
+    topic2 = insert(:topic, table: table, name: "Popular Topic")
+    topic3 = insert(:topic, table: table, name: "Regular Topic")
     Topic.vote_for!(topic2)
     Topic.vote_for!(topic2)
     Topic.vote_for!(topic2)
@@ -53,7 +54,7 @@ defmodule TheLeanCafe.TopicTest do
   end
 
   test "mark topic as completed by id" do
-    topic = Repo.insert!(%Topic{name: "Coding is cool"})
+    topic = insert(:topic, name: "Coding is cool")
     assert !topic.completed
     Topic.complete!(topic)
     topic = Repo.get!(Topic, topic.id)
@@ -65,7 +66,7 @@ defmodule TheLeanCafe.TopicTest do
   end
 
   test "get current topic with no topics" do
-    table = Repo.insert!(%Table{})
+    table = insert(:table)
 
     current = table.id
     |> Topic.sorted_by_votes_query
@@ -76,8 +77,8 @@ defmodule TheLeanCafe.TopicTest do
   end
 
   test "get current topic with no votes" do
-    table = Repo.insert!(%Table{})
-    topic = Repo.insert!(%Topic{table: table})
+    table = insert(:table)
+    topic = insert(:topic, table: table)
 
     current = table.id
     |> Topic.sorted_by_votes_query
@@ -88,10 +89,10 @@ defmodule TheLeanCafe.TopicTest do
   end
 
   test "current topic with lots of em" do
-    table = Repo.insert!(%Table{})
-    Repo.insert!(%Topic{table: table, completed: true})
-    Repo.insert!(%Topic{table: table})
-    current_topic = Repo.insert!(%Topic{table: table})
+    table = insert(:table)
+    insert(:topic, table: table, completed: true)
+    insert(:topic, table: table)
+    current_topic = insert(:topic, table: table)
     Repo.insert!(%DotVote{topic: current_topic})
 
     current = table.id
@@ -103,11 +104,11 @@ defmodule TheLeanCafe.TopicTest do
   end
 
   test "break sort ties by oldest first" do
-    table = Repo.insert!(%Table{})
-    oldest = Repo.insert!(%Topic{table: table})
-    middle_no_votes = Repo.insert!(%Topic{table: table})
-    middle_with_votes = Repo.insert!(%Topic{table: table})
-    newest = Repo.insert!(%Topic{table: table})
+    table = insert(:table)
+    oldest = insert(:topic, table: table)
+    middle_no_votes = insert(:topic, table: table)
+    middle_with_votes = insert(:topic, table: table)
+    newest = insert(:topic, table: table)
     Repo.insert!(%DotVote{topic: middle_with_votes})
 
     sorted_by_votes = table.id

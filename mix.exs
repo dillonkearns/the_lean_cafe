@@ -18,7 +18,7 @@ defmodule TheLeanCafe.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {TheLeanCafe, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
+     applications: [:ex_machina, :phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
                     :phoenix_ecto, :postgrex]]
   end
 
@@ -37,6 +37,7 @@ defmodule TheLeanCafe.Mixfile do
      {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:mix_test_watch, "~> 0.2", only: :dev},
+     {:ex_machina, "~> 1.0"},
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:hashids, "~> 2.0"}]
