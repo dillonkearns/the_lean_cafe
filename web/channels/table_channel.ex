@@ -1,6 +1,6 @@
 defmodule TheLeanCafe.TableChannel do
   use Phoenix.Channel
-  alias TheLeanCafe.{Presence, Table, Topic, DotVote, Repo, TopicView, RomanCounter}
+  alias TheLeanCafe.{Presence, Table, Topic, Repo, TopicView, RomanCounter}
 
   intercept ["new_topic", "topics", "close_poll"]
 
@@ -96,10 +96,14 @@ defmodule TheLeanCafe.TableChannel do
     table_id = Obfuscator.decode(table_hashid)
     table = Repo.get!(Table, table_id)
 
-    table
-    |> Table.current_topic
-    |> Repo.one
-    |> Topic.complete!
+    current_topic =
+      table
+      |> Table.current_topic
+      |> Repo.one
+
+    current_topic
+    |> Topic.complete
+    |> Repo.update!
 
     broadcast! socket, "topics", topics_payload(table_hashid)
     {:noreply, socket}

@@ -48,7 +48,7 @@ defmodule TheLeanCafe.Table do
   def current_topic(table) do
     table
     |> topics_query
-    |> Topic.incomplete
+    |> Topic.incomplete_query
     |> first
   end
 

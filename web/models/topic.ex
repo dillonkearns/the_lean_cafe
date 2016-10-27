@@ -1,6 +1,6 @@
 defmodule TheLeanCafe.Topic do
   use TheLeanCafe.Web, :model
-  alias TheLeanCafe.{Repo, Topic, DotVote}
+  alias TheLeanCafe.{Topic, DotVote}
 
   schema "topics" do
     field :name, :string
@@ -21,13 +21,9 @@ defmodule TheLeanCafe.Topic do
     %DotVote{topic_id: topic_id}
   end
 
-  def complete!(nil) do
-  end
-
-  def complete!(topic) do
+  def complete(topic) do
     topic
     |> Ecto.Changeset.change(%{completed: true})
-    |> TheLeanCafe.Repo.update!
   end
 
   def oldest_first_query(table_id) do
@@ -50,7 +46,7 @@ defmodule TheLeanCafe.Topic do
     |> where([topic], topic.table_id == ^table_id)
   end
 
-  def incomplete(query) do
+  def incomplete_query(query) do
     query
     |> where([topic], topic.completed != true)
   end

@@ -51,16 +51,11 @@ defmodule TheLeanCafe.TopicTest do
     assert [{%Topic{name: "Popular Topic"}, 3}, {%Topic{name: "Regular Topic"}, 1}, {%Topic{name: "Unpopular Topic"}, 0}] = topics_and_votes
   end
 
-  test "mark topic as completed by id" do
-    topic = insert(:topic, name: "Coding is cool")
+  test "complete topic" do
+    topic = insert(:topic)
     assert !topic.completed
-    Topic.complete!(topic)
-    topic = Repo.get!(Topic, topic.id)
+    topic = topic |> Topic.complete |> Repo.update!
     assert topic.completed
-  end
-
-  test "complete! does not error out for nil" do
-    Topic.complete!(nil)
   end
 
   test "get current topic with no topics" do
