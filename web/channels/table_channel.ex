@@ -101,9 +101,11 @@ defmodule TheLeanCafe.TableChannel do
       |> Table.current_topic
       |> Repo.one
 
-    current_topic
-    |> Topic.complete
-    |> Repo.update!
+    if current_topic do
+      current_topic
+      |> Topic.complete
+      |> Repo.update!
+    end
 
     broadcast! socket, "topics", topics_payload(table_hashid)
     {:noreply, socket}
