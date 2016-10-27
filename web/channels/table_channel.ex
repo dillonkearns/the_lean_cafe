@@ -78,7 +78,7 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   def handle_in("dot_vote", %{"topic_id" => topic_id}, socket = %{topic: "table:" <> table_hashid}) do
-    Repo.insert!(%DotVote{topic_id: topic_id})
+    Topic.vote_for(topic_id) |> Repo.insert!
     broadcast! socket, "topics", %{topics: topics(table_hashid)}
     {:noreply, socket}
   end

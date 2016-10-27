@@ -22,8 +22,8 @@ defmodule TheLeanCafe.Topic do
     length(topic.dot_votes)
   end
 
-  def vote_for!(%Topic{id: id}) do
-    Repo.insert!(%DotVote{topic_id: id})
+  def vote_for(topic_id) do
+    %DotVote{topic_id: topic_id}
   end
 
   def complete!(nil) do

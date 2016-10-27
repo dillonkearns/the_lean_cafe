@@ -17,6 +17,12 @@ defmodule TheLeanCafe.TopicTest do
     refute changeset.valid?
   end
 
+  test "vote_for creates dot vote for topic" do
+    topic = insert(:topic)
+    vote =  Topic.vote_for(topic.id) |> Repo.insert!
+    assert vote.topic_id == topic.id
+  end
+
   test "get list of topics with dot vote counts" do
     table = insert(:table)
     build(:topic, table: table, name: "Unpopular Topic") |> with_dot_votes(0) |> insert
