@@ -2,7 +2,7 @@ defmodule TheLeanCafe.TopicTest do
   use TheLeanCafe.ModelCase
   import TheLeanCafe.Factory
 
-  alias TheLeanCafe.{Topic, Repo, DotVote}
+  alias TheLeanCafe.{Topic, Repo}
 
   @valid_attrs %{name: "some content"}
   @invalid_attrs %{}
@@ -19,13 +19,9 @@ defmodule TheLeanCafe.TopicTest do
 
   test "get list of topics with dot vote counts" do
     table = insert(:table)
-    _topic1 = insert(:topic, table: table, name: "Unpopular Topic")
-    topic2 = insert(:topic, table: table, name: "Popular Topic")
-    topic3 = insert(:topic, table: table, name: "Regular Topic")
-    Topic.vote_for!(topic2)
-    Topic.vote_for!(topic2)
-    Topic.vote_for!(topic2)
-    Topic.vote_for!(topic3)
+    build(:topic, table: table, name: "Unpopular Topic") |> with_dot_votes(0) |> insert
+    build(:topic, table: table, name: "Popular Topic") |> with_dot_votes(3) |> insert
+    build(:topic, table: table, name: "Regular Topic") |> with_dot_votes(1) |> insert
 
     topics_and_votes =
       table.id
@@ -38,13 +34,9 @@ defmodule TheLeanCafe.TopicTest do
 
   test "sort by dot votes" do
     table = insert(:table)
-    _topic1 = insert(:topic, table: table, name: "Unpopular Topic")
-    topic2 = insert(:topic, table: table, name: "Popular Topic")
-    topic3 = insert(:topic, table: table, name: "Regular Topic")
-    Topic.vote_for!(topic2)
-    Topic.vote_for!(topic2)
-    Topic.vote_for!(topic2)
-    Topic.vote_for!(topic3)
+    build(:topic, table: table, name: "Unpopular Topic") |> with_dot_votes(0) |> insert
+    build(:topic, table: table, name: "Popular Topic") |> with_dot_votes(3) |> insert
+    build(:topic, table: table, name: "Regular Topic") |> with_dot_votes(1) |> insert
 
     topics_and_votes =
       Topic.sorted_by_votes_query(table.id)
@@ -92,8 +84,7 @@ defmodule TheLeanCafe.TopicTest do
     table = insert(:table)
     insert(:topic, table: table, completed: true)
     insert(:topic, table: table)
-    current_topic = insert(:topic, table: table)
-    Repo.insert!(%DotVote{topic: current_topic})
+    current_topic = build(:topic, table: table) |> with_dot_votes(1) |> insert
 
     current = table.id
     |> Topic.sorted_by_votes_query
@@ -107,9 +98,8 @@ defmodule TheLeanCafe.TopicTest do
     table = insert(:table)
     oldest = insert(:topic, table: table)
     middle_no_votes = insert(:topic, table: table)
-    middle_with_votes = insert(:topic, table: table)
+    middle_with_votes = build(:topic, table: table) |> with_dot_votes(1) |> insert
     newest = insert(:topic, table: table)
-    Repo.insert!(%DotVote{topic: middle_with_votes})
 
     sorted_by_votes = table.id
     |> Topic.sorted_by_votes_query

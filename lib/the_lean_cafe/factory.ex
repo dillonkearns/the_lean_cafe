@@ -18,6 +18,12 @@ defmodule TheLeanCafe.Factory do
   end
 
   def with_dot_votes(topic, n) do
-    %{topic | dot_votes: build_list(n, :dot_vote)}
+    # build_list(0, ...) mistakenly builds a List with 2 items
+    dot_votes = if n == 0 do
+      []
+    else
+      build_list(n, :dot_vote)
+    end
+    %{topic | dot_votes: dot_votes}
   end
 end
