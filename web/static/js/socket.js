@@ -57,7 +57,15 @@ function joinChannel(channel) {
   channel.join()
     .receive("ok", resp => { console.log("Joined successfully", resp) })
     .receive("error", resp => { console.log("Unable to join", resp) })
+
+    $('#username-group').addClass('has-success')
+    $('#username-group').addClass('has-feedback')
 }
+
+$('#username-group').on('input', function() {
+  $('#username-group').removeClass('has-success')
+  $('#username-group').removeClass('has-feedback')
+})
 
 let channel = createChannel(myUsername())
 joinChannel(channel)
