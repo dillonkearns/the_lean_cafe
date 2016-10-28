@@ -69,7 +69,16 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   defp handle("roman_vote", %{"vote" => vote}, socket, table) do
-    count_vote(socket, vote)
+    Presence.update(socket, socket.assigns.username, %{last_vote: [table.current_roman_timestamp, vote]})
+
+    roman_result = Presence.list(socket)
+    |> RomanCounter.result(table.current_roman_timestamp)
+
+    if roman_result != :inconclusive do
+      broadcast_roman_result(socket, roman_result)
+      Table.reset_roman_vote(table)
+    end
+    broadcast_users(socket)
     {:reply, :ok, socket}
   end
 
@@ -88,21 +97,6 @@ defmodule TheLeanCafe.TableChannel do
 
   defp broadcast_roman_result(socket, result) do
     broadcast! socket, "roman_result", %{result: result}
-  end
-
-  defp count_vote(socket = %{topic: "table:" <> table_hashid}, vote) do
-    table_id = Obfuscator.decode(table_hashid)
-    current_roman_timestamp = Table.current_roman_timestamp(table_id)
-    Presence.update(socket, socket.assigns.username, %{last_vote: [current_roman_timestamp, vote]})
-
-    roman_result = Presence.list(socket)
-    |> RomanCounter.result(current_roman_timestamp)
-
-    if roman_result != :inconclusive do
-      broadcast_roman_result(socket, roman_result)
-      Table.reset_roman_vote(Repo.get!(Table, table_id))
-    end
-    broadcast_users(socket)
   end
 
   defp connected_users(socket = %{topic: "table:" <> table_hashid}) do
