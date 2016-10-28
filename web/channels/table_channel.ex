@@ -1,6 +1,8 @@
 defmodule TheLeanCafe.TableChannel do
   use Phoenix.Channel
   alias TheLeanCafe.{Presence, Table, Topic, Repo, TopicView, RomanCounter}
+  require Ecto.Query
+  import Ecto.Query
 
   intercept ["new_topic", "topics", "close_poll"]
 
@@ -115,6 +117,15 @@ defmodule TheLeanCafe.TableChannel do
     table_id = Obfuscator.decode(table_hashid)
     topic = %Topic{table_id: table_id, name: body}
     Repo.insert!(topic)
+    broadcast! socket, "topics", topics_payload(table_hashid)
+    {:reply, :ok, socket}
+  end
+
+  def handle_in("rename_topic", %{"body" => new_name, "id" => topic_id}, socket = %{topic: "table:" <> table_hashid}) do
+    table_id = Obfuscator.decode(table_hashid)
+    topic = Repo.get!(Topic, topic_id)
+    Topic.changeset(topic, %{name: new_name}) |> Repo.update!
+
     broadcast! socket, "topics", topics_payload(table_hashid)
     {:reply, :ok, socket}
   end

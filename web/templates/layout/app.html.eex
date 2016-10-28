@@ -10,6 +10,24 @@
     <title>Welcome to The Lean Cafe!</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.css">
+
+    <!-- x-editable (bootstrap version) -->
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script>
+    window.makeTopicsEditable = (function () {
+      $.fn.editable.defaults.mode = 'inline';
+      $(".topic-name").editable({
+        type: "text",
+        mode: "inline",
+        escape: false,
+        url: function(params) {
+            window.channel.push('rename_topic', {body: params.value, id: params.pk})
+        }
+      });
+    });
+    </script>
   </head>
 
   <body>

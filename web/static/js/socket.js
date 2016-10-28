@@ -45,6 +45,7 @@ function joinChannel(channel) {
     }
     $(`#topics`).empty()
     $(`#topics`).append(payload.topics)
+    window.makeTopicsEditable()
   })
 
   channel.on('roman_result', payload => {
@@ -57,6 +58,8 @@ function joinChannel(channel) {
   channel.join()
     .receive("ok", resp => { console.log("Joined successfully", resp) })
     .receive("error", resp => { console.log("Unable to join", resp) })
+
+  window.channel = channel
 
     $('#username-group').addClass('has-success')
     $('#username-group').addClass('has-feedback')
@@ -158,7 +161,5 @@ window.dotVote = function (id) {
 function addTopic(topicHtml) {
   $(`#topics`).append(topicHtml)
 }
-
-
 
 export default socket
