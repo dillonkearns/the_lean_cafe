@@ -1,8 +1,6 @@
 defmodule TheLeanCafe.TableChannel do
   use Phoenix.Channel
   alias TheLeanCafe.{Presence, Table, Topic, Repo, TopicView, RomanCounter}
-  require Ecto.Query
-  import Ecto.Query
 
   intercept ["new_topic", "topics", "close_poll"]
 
