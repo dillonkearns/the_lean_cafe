@@ -9,68 +9,6 @@ defmodule TheLeanCafe.TableChannel do
     {:ok, socket}
   end
 
-  def topics(table_hashid) do
-    table_id = Obfuscator.decode(table_hashid)
-    table = Repo.get!(Table, table_id)
-
-    topics_and_dot_votes =
-      table
-      |> Table.topics_query
-      |> Topic.with_vote_counts
-      |> Repo.all
-
-    Phoenix.View.render_to_string(TopicView, "index.html", topics_and_dot_votes: topics_and_dot_votes)
-  end
-
-  def track_new_user(socket) do
-    Presence.track(socket, socket.assigns.username, %{
-      joined_at: :os.system_time(:milli_seconds)
-    })
-    broadcast_users(socket)
-  end
-
-  def clear_votes(socket = %{topic: "table:" <> table_hashid}) do
-    Table.reset_roman_vote(Table.get_by_hashid(table_hashid))
-    broadcast_users(socket)
-  end
-
-  def broadcast_roman_result(socket, result) do
-    broadcast! socket, "roman_result", %{result: result}
-  end
-
-  def count_vote(socket = %{topic: "table:" <> table_hashid}, vote) do
-    table_id = Obfuscator.decode(table_hashid)
-    current_roman_timestamp = Table.current_roman_timestamp(table_id)
-    Presence.update(socket, socket.assigns.username, %{last_vote: [current_roman_timestamp, vote]})
-
-    roman_result = Presence.list(socket)
-    |> RomanCounter.result(current_roman_timestamp)
-
-    if roman_result != :inconclusive do
-      broadcast_roman_result(socket, roman_result)
-      Table.reset_roman_vote(Repo.get!(Table, table_id))
-    end
-    broadcast_users(socket)
-  end
-
-  def connected_users(socket = %{topic: "table:" <> table_hashid}) do
-    table_id = Obfuscator.decode(table_hashid)
-    current_roman_timestamp = Table.current_roman_timestamp(table_id)
-    socket
-    |> Presence.list
-    |> RomanCounter.users_to_json(current_roman_timestamp)
-  end
-
-  def topics_payload(table_hashid) do
-    table_id = Obfuscator.decode(table_hashid)
-    table = Repo.get!(Table, table_id)
-    %{topics: topics(table_hashid), pollClosed: table.poll_closed}
-  end
-
-  def broadcast_users(socket) do
-    broadcast! socket, "users", %{users: connected_users(socket)}
-  end
-
   def handle_info({:after_join, _params}, socket = %{topic: "table:" <> table_hashid}) do
     track_new_user(socket)
     push socket, "topics", topics_payload(table_hashid)
@@ -136,6 +74,68 @@ defmodule TheLeanCafe.TableChannel do
   def handle_in("clear_votes", _params, socket) do
     clear_votes(socket)
     {:reply, :ok, socket}
+  end
+
+  defp topics(table_hashid) do
+    table_id = Obfuscator.decode(table_hashid)
+    table = Repo.get!(Table, table_id)
+
+    topics_and_dot_votes =
+      table
+      |> Table.topics_query
+      |> Topic.with_vote_counts
+      |> Repo.all
+
+    Phoenix.View.render_to_string(TopicView, "index.html", topics_and_dot_votes: topics_and_dot_votes)
+  end
+
+  defp track_new_user(socket) do
+    Presence.track(socket, socket.assigns.username, %{
+      joined_at: :os.system_time(:milli_seconds)
+    })
+    broadcast_users(socket)
+  end
+
+  defp clear_votes(socket = %{topic: "table:" <> table_hashid}) do
+    Table.reset_roman_vote(Table.get_by_hashid(table_hashid))
+    broadcast_users(socket)
+  end
+
+  defp broadcast_roman_result(socket, result) do
+    broadcast! socket, "roman_result", %{result: result}
+  end
+
+  defp count_vote(socket = %{topic: "table:" <> table_hashid}, vote) do
+    table_id = Obfuscator.decode(table_hashid)
+    current_roman_timestamp = Table.current_roman_timestamp(table_id)
+    Presence.update(socket, socket.assigns.username, %{last_vote: [current_roman_timestamp, vote]})
+
+    roman_result = Presence.list(socket)
+    |> RomanCounter.result(current_roman_timestamp)
+
+    if roman_result != :inconclusive do
+      broadcast_roman_result(socket, roman_result)
+      Table.reset_roman_vote(Repo.get!(Table, table_id))
+    end
+    broadcast_users(socket)
+  end
+
+  defp connected_users(socket = %{topic: "table:" <> table_hashid}) do
+    table_id = Obfuscator.decode(table_hashid)
+    current_roman_timestamp = Table.current_roman_timestamp(table_id)
+    socket
+    |> Presence.list
+    |> RomanCounter.users_to_json(current_roman_timestamp)
+  end
+
+  defp topics_payload(table_hashid) do
+    table_id = Obfuscator.decode(table_hashid)
+    table = Repo.get!(Table, table_id)
+    %{topics: topics(table_hashid), pollClosed: table.poll_closed}
+  end
+
+  defp broadcast_users(socket) do
+    broadcast! socket, "users", %{users: connected_users(socket)}
   end
 
   def handle_out(event, payload, socket) do
