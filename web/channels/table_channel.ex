@@ -25,14 +25,14 @@ defmodule TheLeanCafe.TableChannel do
 
   defp handle("dot_vote", %{"topic_id" => topic_id}, socket, table) do
     Topic.vote_for(topic_id) |> Repo.insert!
-    broadcast! socket, "topics", topics_payload(table)
+    broadcast_topics socket, table
     {:noreply, socket}
   end
 
   defp handle("close_poll", _, socket, table) do
     change = Ecto.Changeset.change(table, poll_closed: true)
     Repo.update(change)
-    broadcast! socket, "topics", topics_payload(table)
+    broadcast_topics socket, table
     {:noreply, socket}
   end
 
@@ -48,14 +48,15 @@ defmodule TheLeanCafe.TableChannel do
       |> Repo.update!
     end
 
-    broadcast! socket, "topics", topics_payload(table)
+    broadcast_topics socket, table
+
     {:noreply, socket}
   end
 
   defp handle("new_topic", %{"body" => body}, socket, table) do
     topic = %Topic{table: table, name: body}
     Repo.insert!(topic)
-    broadcast! socket, "topics", topics_payload(table)
+    broadcast_topics socket, table
     {:reply, :ok, socket}
   end
 
@@ -63,7 +64,7 @@ defmodule TheLeanCafe.TableChannel do
     topic = Repo.get!(Topic, topic_id)
     Topic.changeset(topic, %{name: new_name}) |> Repo.update!
 
-    broadcast! socket, "topics", topics_payload(table)
+    broadcast_topics socket, table
     {:reply, :ok, socket}
   end
 
@@ -128,6 +129,10 @@ defmodule TheLeanCafe.TableChannel do
 
   defp broadcast_users(socket) do
     broadcast! socket, "users", %{users: connected_users(socket)}
+  end
+
+  defp broadcast_topics(socket, table) do
+    broadcast! socket, "topics", topics_payload(table)
   end
 
   def handle_out(event, payload, socket) do
