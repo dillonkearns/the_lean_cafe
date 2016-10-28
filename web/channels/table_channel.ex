@@ -13,7 +13,7 @@ defmodule TheLeanCafe.TableChannel do
     track_new_user(socket)
     table_id = Obfuscator.decode(table_hashid)
     table = Repo.get!(Table, table_id)
-    push socket, "topics", topics_payload(table)
+    broadcast_topics(socket, table)
     {:noreply, socket}
   end
 
