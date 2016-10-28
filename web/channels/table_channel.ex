@@ -11,29 +11,33 @@ defmodule TheLeanCafe.TableChannel do
 
   def handle_info({:after_join, _params}, socket = %{topic: "table:" <> table_hashid}) do
     track_new_user(socket)
-    push socket, "topics", topics_payload(table_hashid)
+    table_id = Obfuscator.decode(table_hashid)
+    table = Repo.get!(Table, table_id)
+    push socket, "topics", topics_payload(table)
     {:noreply, socket}
   end
 
-  def handle_in("dot_vote", %{"topic_id" => topic_id}, socket = %{topic: "table:" <> table_hashid}) do
+  def handle_in(message, params, socket = %{topic: "table:" <> table_hashid}) do
+    table_id = Obfuscator.decode(table_hashid)
+    table = Repo.get!(Table, table_id)
+    handle(message, params, socket, table)
+  end
+
+  defp handle("dot_vote", %{"topic_id" => topic_id}, socket, table) do
     Topic.vote_for(topic_id) |> Repo.insert!
+    table_hashid = Obfuscator.encode(table.id)
     broadcast! socket, "topics", %{topics: topics(table_hashid)}
     {:noreply, socket}
   end
 
-  def handle_in("close_poll", _, socket = %{topic: "table:" <> table_hashid}) do
-    table_id = Obfuscator.decode(table_hashid)
-    table = Repo.get!(Table, table_id)
+  defp handle("close_poll", _, socket, table) do
     change = Ecto.Changeset.change(table, poll_closed: true)
     Repo.update(change)
-    broadcast! socket, "topics", topics_payload(table_hashid)
+    broadcast! socket, "topics", topics_payload(table)
     {:noreply, socket}
   end
 
-  def handle_in("complete_topic", _, socket = %{topic: "table:" <> table_hashid}) do
-    table_id = Obfuscator.decode(table_hashid)
-    table = Repo.get!(Table, table_id)
-
+  defp handle("complete_topic", _, socket, table) do
     current_topic =
       table
       |> Table.current_topic
@@ -45,34 +49,33 @@ defmodule TheLeanCafe.TableChannel do
       |> Repo.update!
     end
 
-    broadcast! socket, "topics", topics_payload(table_hashid)
+    broadcast! socket, "topics", topics_payload(table)
     {:noreply, socket}
   end
 
-  def handle_in("new_topic", %{"body" => body}, socket = %{topic: "table:" <> table_hashid}) do
-    table_id = Obfuscator.decode(table_hashid)
-    topic = %Topic{table_id: table_id, name: body}
+  defp handle("new_topic", %{"body" => body}, socket, table) do
+    topic = %Topic{table: table, name: body}
     Repo.insert!(topic)
-    broadcast! socket, "topics", topics_payload(table_hashid)
+    broadcast! socket, "topics", topics_payload(table)
     {:reply, :ok, socket}
   end
 
-  def handle_in("rename_topic", %{"body" => new_name, "id" => topic_id}, socket = %{topic: "table:" <> table_hashid}) do
-    table_id = Obfuscator.decode(table_hashid)
+  defp handle("rename_topic", %{"body" => new_name, "id" => topic_id}, socket, table) do
     topic = Repo.get!(Topic, topic_id)
     Topic.changeset(topic, %{name: new_name}) |> Repo.update!
 
-    broadcast! socket, "topics", topics_payload(table_hashid)
+    broadcast! socket, "topics", topics_payload(table)
     {:reply, :ok, socket}
   end
 
-  def handle_in("roman_vote", %{"vote" => vote}, socket) do
+  defp handle("roman_vote", %{"vote" => vote}, socket, table) do
     count_vote(socket, vote)
     {:reply, :ok, socket}
   end
 
-  def handle_in("clear_votes", _params, socket) do
-    clear_votes(socket)
+  defp handle("clear_votes", _params, socket, table) do
+    Table.reset_roman_vote(table)
+    broadcast_users(socket)
     {:reply, :ok, socket}
   end
 
@@ -93,11 +96,6 @@ defmodule TheLeanCafe.TableChannel do
     Presence.track(socket, socket.assigns.username, %{
       joined_at: :os.system_time(:milli_seconds)
     })
-    broadcast_users(socket)
-  end
-
-  defp clear_votes(socket = %{topic: "table:" <> table_hashid}) do
-    Table.reset_roman_vote(Table.get_by_hashid(table_hashid))
     broadcast_users(socket)
   end
 
@@ -128,9 +126,8 @@ defmodule TheLeanCafe.TableChannel do
     |> RomanCounter.users_to_json(current_roman_timestamp)
   end
 
-  defp topics_payload(table_hashid) do
-    table_id = Obfuscator.decode(table_hashid)
-    table = Repo.get!(Table, table_id)
+  defp topics_payload(table) do
+    table_hashid = Obfuscator.encode(table.id)
     %{topics: topics(table_hashid), pollClosed: table.poll_closed}
   end
 
