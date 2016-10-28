@@ -25,8 +25,7 @@ defmodule TheLeanCafe.TableChannel do
 
   defp handle("dot_vote", %{"topic_id" => topic_id}, socket, table) do
     Topic.vote_for(topic_id) |> Repo.insert!
-    table_hashid = Obfuscator.encode(table.id)
-    broadcast! socket, "topics", %{topics: topics(table_hashid)}
+    broadcast! socket, "topics", topics_payload(table)
     {:noreply, socket}
   end
 
@@ -79,19 +78,6 @@ defmodule TheLeanCafe.TableChannel do
     {:reply, :ok, socket}
   end
 
-  defp topics(table_hashid) do
-    table_id = Obfuscator.decode(table_hashid)
-    table = Repo.get!(Table, table_id)
-
-    topics_and_dot_votes =
-      table
-      |> Table.topics_query
-      |> Topic.with_vote_counts
-      |> Repo.all
-
-    Phoenix.View.render_to_string(TopicView, "index.html", topics_and_dot_votes: topics_and_dot_votes)
-  end
-
   defp track_new_user(socket) do
     Presence.track(socket, socket.assigns.username, %{
       joined_at: :os.system_time(:milli_seconds)
@@ -127,8 +113,17 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   defp topics_payload(table) do
-    table_hashid = Obfuscator.encode(table.id)
-    %{topics: topics(table_hashid), pollClosed: table.poll_closed}
+    %{topics: topics(table), pollClosed: table.poll_closed}
+  end
+
+  defp topics(table) do
+    topics_and_dot_votes =
+      table
+      |> Table.topics_query
+      |> Topic.with_vote_counts
+      |> Repo.all
+
+    Phoenix.View.render_to_string(TopicView, "index.html", topics_and_dot_votes: topics_and_dot_votes)
   end
 
   defp broadcast_users(socket) do
