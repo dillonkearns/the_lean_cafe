@@ -4,7 +4,7 @@ defmodule TheLeanCafe.Table do
 
   schema "tables" do
     has_many :topics, Topic
-    field :poll_closed, :boolean, default: false
+    field :state, :string, default: "brainstorm"
     field :current_roman_timestamp, :integer, default: 0
 
     timestamps()
@@ -37,12 +37,12 @@ defmodule TheLeanCafe.Table do
     Obfuscator.encode(id)
   end
 
-  def topics_query(%Table{id: id, poll_closed: true}) do
-    Topic.sorted_by_votes_query(id)
+  def topics_query(%Table{id: id, state: "brainstorm"}) do
+    Topic.oldest_first_query(id)
   end
 
   def topics_query(%Table{id: id}) do
-    Topic.oldest_first_query(id)
+    Topic.sorted_by_votes_query(id)
   end
 
   def current_topic(table) do

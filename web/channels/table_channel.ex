@@ -30,8 +30,8 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   defp handle("close_poll", _, socket, table) do
-    change = Ecto.Changeset.change(table, poll_closed: true)
-    Repo.update(change)
+    change = Ecto.Changeset.change(table, state: "vote")
+    table = Repo.update!(change)
     broadcast_topics socket, table
     {:noreply, socket}
   end
@@ -108,7 +108,7 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   defp topics_payload(table) do
-    %{topics: topics(table), pollClosed: table.poll_closed}
+    %{topics: topics(table), pollClosed: table.state != "brainstorm"}
   end
 
   defp topics(table) do
