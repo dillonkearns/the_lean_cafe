@@ -43,11 +43,7 @@ function joinChannel(channel) {
   })
 
   channel.on("topics", payload => {
-    if (payload.state === 'brainstorm') {
-      openPoll()
-    } else {
-      closePoll()
-    }
+    showFormsForState(payload.state)
     $('.topics').empty()
     $('#topics-incomplete').append(payload.incomplete)
     $('#topics-complete').append(payload.complete)
@@ -145,14 +141,18 @@ document.querySelector("#complete-topic").onclick = function () {
   channel.push("complete_topic", {})
 }
 
-function closePoll() {
-  $(topicInputForm).hide()
-  $(".current-topic-form").show()
-}
+function showFormsForState(state) {
+  if (state === 'brainstorm') {
+    $(".topic-input-form").show()
+  } else {
+    $(".topic-input-form").hide()
+  }
 
-function openPoll() {
-  $(".topic-input-form").show()
-  $(".current-topic-form").hide()
+  if (state === 'discuss') {
+    $(".current-topic-form").show()
+  } else {
+    $(".current-topic-form").hide()
+  }
 }
 
 function roomHash() {
