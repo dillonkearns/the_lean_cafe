@@ -3,19 +3,27 @@ defmodule TheLeanCafe.AddTopicsTest do
 
   @tag :acceptance
   test "add topic" do
-    navigate_to "/"
-    find_element(:css, "[type=submit]")
-    |> click
+    grab_a_table
 
+    add_topic("Some interesting topic")
+
+    assert visible_in_element?({:css, "#topics-incomplete li"}, ~r/Some interesting topic/)
+  end
+
+  def add_topic(topic_name) do
     find_element(:css, "#topic-input")
     |> click
 
-    send_text("Some interesting topic")
+    send_text(topic_name)
 
     find_element(:css, ".topic-input-form [type=submit]")
     |> click
+  end
 
-    assert visible_in_element?({:css, "#topics-incomplete li"}, ~r/Some interesting topic/)
+  def grab_a_table do
+    navigate_to "/"
+    find_element(:css, "[type=submit]")
+    |> click
   end
 
 end
