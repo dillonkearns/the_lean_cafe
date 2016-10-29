@@ -10,6 +10,15 @@
   background-size: cover;
 }
 
+.state {
+  color: white;
+  font-size: 20px;
+}
+
+.table a.selected {
+  background-color: #337ab7;
+}
+
 .table {
   color: white;
   padding: 40px;

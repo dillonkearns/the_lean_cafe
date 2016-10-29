@@ -14,6 +14,8 @@ defmodule TheLeanCafe.TableChannel do
     table_id = Obfuscator.decode(table_hashid)
     table = Repo.get!(Table, table_id)
     push socket, "topics", topics_payload(table)
+    states_html = Phoenix.View.render_to_string(TheLeanCafe.TableView, "_state_group.html", %{current_state: table.state})
+    push socket, "states", %{states_html: states_html}
     {:noreply, socket}
   end
 
@@ -85,6 +87,12 @@ defmodule TheLeanCafe.TableChannel do
   defp handle("clear_votes", _params, socket, table) do
     Table.reset_roman_vote(table)
     broadcast_users(socket)
+    {:reply, :ok, socket}
+  end
+
+  defp handle("change_state", %{"to_state" => to_state}, socket, _table) do
+    states_html = Phoenix.View.render_to_string(TheLeanCafe.TableView, "_state_group.html", %{current_state: to_state})
+    broadcast! socket, "states", %{states_html: states_html}
     {:reply, :ok, socket}
   end
 

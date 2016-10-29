@@ -31,6 +31,9 @@ function joinChannel(channel) {
   channel.on("new_topic", payload => {
     addTopic(payload.body)
   })
+  channel.on("states", payload => {
+    $('#states-group').html(payload.states_html)
+  })
 
   channel.on("users", payload => {
     let thisUser = payload.users.find(user => user.username === myUsername())
@@ -81,7 +84,6 @@ function reconnectAs(username) {
 
 let chatInput = document.querySelector("#topic-input")
 let messagesContainer = document.querySelector("#topics")
-let closePollButton = document.querySelector("#close-poll")
 let topicInputForm = $(".topic-input-form")
 let currentTopicForm = $(".current-topic-form")
 let pollClosed = false
@@ -134,8 +136,10 @@ $('#topic-input-form').submit(function(ev) {
     $('#topic-input').focus()
 });
 
-closePollButton.onclick = function () {
-  channel.push("close_poll", {})
+window.changeState = function (toState) {
+  if (toState !== 'brainstorm') {
+    channel.push("close_poll", {})
+  }
 }
 
 document.querySelector("#complete-topic").onclick = function () {

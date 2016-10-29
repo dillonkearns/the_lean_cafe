@@ -1,6 +1,11 @@
 <div class="tablebg container-fluid">
 
-  <div class="row table">
+  <div class="col table">
+    <div id="states-group" class="state row-1">
+
+  </div>
+
+  <div class="row ">
 
     <div class="col-sm-9">
       <div class="topic-input row">
@@ -41,15 +46,12 @@
         <a id="clear-votes" onclick="clearVotes()" class="btn btn-warning">Clear Votes</a>
       </div>
 
-      <div style="padding-top: 50px;" class="topic-input-form">
-        <a id="close-poll" class="btn btn-danger">Close Poll</a>
-      </div>
-
       <div style="padding-top: 50px;" class="current-topic-form">
         <a id="complete-topic" class="btn btn-danger">Complete Topic</a>
       </div>
 
     </div>
+  </div>
   </div>
 
 

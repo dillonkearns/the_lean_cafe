@@ -1,0 +1,5 @@
+<a class="label label-default selected" onclick="changeState('brainstorm')">Brainstorm</a>
+&gt;
+<a class="label label-default" onclick="changeState('vote')">Vote</a>
+&gt;
+<a class="label label-default" onclick="changeState('discuss')">Discuss!</a>

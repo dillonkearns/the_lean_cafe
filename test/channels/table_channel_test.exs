@@ -35,5 +35,15 @@ defmodule TheLeanCafe.Channels.TableChannelTest do
     assert new_topic_html =~ ~r(<li>.*New topic text.*</li>)s
   end
 
+  test "changes state", %{socket: socket, table: table} do
+    table_hashid = TheLeanCafe.Table.hashid(table)
+    {:ok, _reply, socket} = subscribe_and_join(socket, "table:#{table_hashid}", %{})
+
+    ref = push socket, "change_state", %{to_state: "vote"}
+    assert_reply ref, :ok
+    assert_broadcast "states", states
+    assert states.states_html =~ ~r(<a.*selected.*Vote.*</a>)s
+  end
+
 
 end
