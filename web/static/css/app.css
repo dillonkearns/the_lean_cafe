@@ -85,6 +85,13 @@ html, body, .container {
   color: rgba(190, 190, 190, 0.9);
 }
 
+.editable-input input.input-sm {
+  width: 600px;
+  height: 46px;
+  line-height: 1.3333333;
+  font-size: 25px;
+}
+
 .container-fluid {
   margin: 0 auto;
   height: 100%;
