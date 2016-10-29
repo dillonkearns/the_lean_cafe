@@ -1,13 +1,28 @@
 .current-topic-form {
   visibility: hidden;
 }
+
+html {
+  height: 100%;
+  margin:0px;
+}
+
 .cafebg {
   background: url('https://images.unsplash.com/5/unsplash-bonus.jpg?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&s=13cb0047f0acd3404ba9e5294276b397') no-repeat center center fixed;
   background-size: cover;
+  background-attachment: fixed;
 }
+
+body {
+  min-height: 100%;
+  margin: 0px;
+  background-color: transparent;
+}
+
 .tablebg {
   background: url('https://images.unsplash.com/photo-1439466654360-5e8bbd819be5?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&s=271f23afe5cc8d4352893c145dbf6bb4') no-repeat center center fixed;
   background-size: cover;
+  background-attachment: fixed;
 }
 
 .state {
@@ -22,9 +37,8 @@
 .table {
   color: white;
   padding: 40px;
-  background: rgba(255, 255, 255, 0.25);
-  background: rgba(0, 0, 0, 0.6);
-  height: 100%;
+  min-height: 100%;
+  background: rgba(0, 0, 0, 0.45);
   font-size: 20px;
 }
 
