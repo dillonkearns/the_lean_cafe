@@ -8,7 +8,7 @@ defmodule TheLeanCafe.Background do
     "tablebg"
   end
 
-  def for(view_module, view_template) do
+  def for(_view_module, _view_template) do
     ""
   end
 
