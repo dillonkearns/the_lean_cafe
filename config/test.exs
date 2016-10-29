@@ -8,7 +8,7 @@ config :the_lean_cafe, TheLeanCafe.Endpoint,
 
 config :the_lean_cafe, sql_sandbox: true
 
-config :hound, driver: "chrome_driver"
+config :hound, driver: System.get_env("WEBDRIVER") || "chrome_driver"
 
 # Print only warnings and errors during test
 config :logger, level: :warn
