@@ -4,7 +4,7 @@ defmodule TheLeanCafe.TableChannel do
 
   import Ecto.Query
 
-  intercept ["new_topic", "topics", "close_poll"]
+  intercept ["new_topic", "topics"]
 
   def join("table:" <> _room_name, params, socket) do
     send(self, {:after_join, params})
@@ -29,13 +29,6 @@ defmodule TheLeanCafe.TableChannel do
 
   defp handle("dot_vote", %{"topic_id" => topic_id}, socket, table = %Table{state: "vote"}) do
     Topic.vote_for(topic_id) |> Repo.insert!
-    broadcast_topics socket, table
-    {:noreply, socket}
-  end
-
-  defp handle("close_poll", _, socket, table) do
-    change = Ecto.Changeset.change(table, state: "vote")
-    table = Repo.update!(change)
     broadcast_topics socket, table
     {:noreply, socket}
   end
@@ -120,14 +113,14 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   defp topics_payload(table) do
-    %{complete: topics(table, true), incomplete: topics(table, false), pollClosed: table.state != "brainstorm"}
+    %{complete: topics(table, true), incomplete: topics(table, false), state: table.state}
   end
 
   defp topics(table, completed) do
     topics_and_dot_votes =
       table
       |> Table.topics_query
-      |> Ecto.Query.where([topic], topic.completed == ^completed)
+      |> where([topic], topic.completed == ^completed)
       |> Topic.with_vote_counts
       |> Repo.all
 

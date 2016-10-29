@@ -43,10 +43,10 @@ function joinChannel(channel) {
   })
 
   channel.on("topics", payload => {
-    if (payload.pollClosed) {
-      closePoll()
-    } else {
+    if (payload.state === 'brainstorm') {
       openPoll()
+    } else {
+      closePoll()
     }
     $('.topics').empty()
     $('#topics-incomplete').append(payload.incomplete)
