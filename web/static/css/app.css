@@ -7,16 +7,24 @@ html {
   margin:0px;
 }
 
-.cafebg {
-  background: url('https://images.unsplash.com/5/unsplash-bonus.jpg?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&s=13cb0047f0acd3404ba9e5294276b397') no-repeat center center fixed;
-  background-size: cover;
-  background-attachment: fixed;
-}
-
 body {
   min-height: 100%;
   margin: 0px;
   background-color: transparent;
+
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 18px;
+}
+
+h1, h2, h3 {
+  font-family: 'Josefin Slab', serif;
+}
+
+
+.cafebg {
+  background: url('https://images.unsplash.com/5/unsplash-bonus.jpg?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&s=13cb0047f0acd3404ba9e5294276b397') no-repeat center center fixed;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 .tablebg {
@@ -38,8 +46,16 @@ body {
   color: white;
   padding: 40px;
   min-height: 100%;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.55);
   font-size: 20px;
+}
+
+.topics {
+  font-size: 25px;
+}
+
+#states-group {
+  font-size: 30px;
 }
 
 .highlight, .highlight:active, .highlight:focus, .highlight:hover {
