@@ -1,5 +1,5 @@
-<a class="label label-default selected" onclick="changeState('brainstorm')">Brainstorm</a>
+<a class="label label-default <%= if @current_state == "brainstorm", do: "selected" %>" onclick="changeState('brainstorm')">Brainstorm</a>
 &gt;
-<a class="label label-default" onclick="changeState('vote')">Vote</a>
+<a class="label label-default  <%= if @current_state == "vote", do: "selected" %>" onclick="changeState('vote')">Vote</a>
 &gt;
-<a class="label label-default" onclick="changeState('discuss')">Discuss!</a>
+<a class="label label-default  <%= if @current_state == "discuss", do: "selected" %>" onclick="changeState('discuss')">Discuss!</a>

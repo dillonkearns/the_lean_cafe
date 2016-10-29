@@ -42,8 +42,8 @@ defmodule TheLeanCafe.Channels.TableChannelTest do
     ref = push socket, "change_state", %{to_state: "vote"}
     assert_reply ref, :ok
     assert_broadcast "states", states
-    assert states.states_html =~ ~r(<a.*selected.*Vote.*</a>)s
+    assert states.states_html =~ ~r(<a[^>]*selected[^<]*Vote.*</a>)s
+    assert Repo.get!(TheLeanCafe.Table, table.id).state == "vote"
   end
-
 
 end

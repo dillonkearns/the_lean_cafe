@@ -137,9 +137,7 @@ $('#topic-input-form').submit(function(ev) {
 });
 
 window.changeState = function (toState) {
-  if (toState !== 'brainstorm') {
-    channel.push("close_poll", {})
-  }
+  channel.push("change_state", {to_state: toState})
 }
 
 document.querySelector("#complete-topic").onclick = function () {

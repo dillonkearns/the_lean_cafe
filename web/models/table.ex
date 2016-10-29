@@ -15,7 +15,7 @@ defmodule TheLeanCafe.Table do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [])
+    |> cast(params, ["state"])
     |> validate_required([])
   end
 

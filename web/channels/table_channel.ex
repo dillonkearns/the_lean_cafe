@@ -90,9 +90,11 @@ defmodule TheLeanCafe.TableChannel do
     {:reply, :ok, socket}
   end
 
-  defp handle("change_state", %{"to_state" => to_state}, socket, _table) do
-    states_html = Phoenix.View.render_to_string(TheLeanCafe.TableView, "_state_group.html", %{current_state: to_state})
+  defp handle("change_state", %{"to_state" => to_state}, socket, table) do
+    table = table |> Table.changeset(%{state: to_state}) |> Repo.update!
+    states_html = Phoenix.View.render_to_string(TheLeanCafe.TableView, "_state_group.html", %{current_state: table.state})
     broadcast! socket, "states", %{states_html: states_html}
+    broadcast_topics socket, table
     {:reply, :ok, socket}
   end
 
