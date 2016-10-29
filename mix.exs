@@ -18,8 +18,20 @@ defmodule TheLeanCafe.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {TheLeanCafe, []},
-     applications: [:ex_machina, :phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex]]
+     applications: app_list(Mix.env)]
+  end
+
+  def app_list(:test) do
+    [:hound | default_app_list]
+  end
+
+  def app_list(_) do
+    default_app_list
+  end
+
+  def default_app_list do
+    [:ex_machina, :phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
+                   :phoenix_ecto, :postgrex]
   end
 
   # Specifies which paths to compile per environment.
@@ -39,6 +51,7 @@ defmodule TheLeanCafe.Mixfile do
      {:mix_test_watch, "~> 0.2", only: :dev},
      {:ex_machina, "~> 1.0"},
      {:gettext, "~> 0.11"},
+     {:hound, "~> 1.0", only: :test},
      {:cowboy, "~> 1.0"},
      {:hashids, "~> 2.0"}]
   end
