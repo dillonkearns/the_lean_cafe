@@ -155,9 +155,7 @@ function roomHash() {
 }
 
 window.dotVote = function (id) {
-  if (!pollClosed) {
-    channel.push("dot_vote", {topic_id: id})
-  }
+  channel.push("dot_vote", {topic_id: id})
 }
 
 function addTopic(topicHtml) {

@@ -25,7 +25,7 @@ defmodule TheLeanCafe.TableChannel do
     handle(message, params, socket, table)
   end
 
-  defp handle("dot_vote", %{"topic_id" => topic_id}, socket, table) do
+  defp handle("dot_vote", %{"topic_id" => topic_id}, socket, table = %Table{state: "vote"}) do
     Topic.vote_for(topic_id) |> Repo.insert!
     broadcast_topics socket, table
     {:noreply, socket}
