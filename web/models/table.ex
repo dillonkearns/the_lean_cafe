@@ -37,12 +37,12 @@ defmodule TheLeanCafe.Table do
     Obfuscator.encode(id)
   end
 
-  def topics_query(%Table{id: id, state: "brainstorm"}) do
-    Topic.oldest_first_query(id)
+  def topics_query(%Table{id: id, state: "discuss"}) do
+    Topic.sorted_by_votes_query(id)
   end
 
   def topics_query(%Table{id: id}) do
-    Topic.sorted_by_votes_query(id)
+    Topic.oldest_first_query(id)
   end
 
   def current_topic(table) do

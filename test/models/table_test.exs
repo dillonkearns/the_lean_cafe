@@ -18,8 +18,8 @@ defmodule TheLeanCafe.TableTest do
       assert Table.topics_query(table) == Topic.oldest_first_query(table.id)
     end
 
-    test "orders by vote count after changing state to vote" do
-      table = Repo.insert!(%Table{state: "vote"})
+    test "orders by vote count after changing state to discuss" do
+      table = Repo.insert!(%Table{state: "discuss"})
       assert Table.topics_query(table) == Topic.sorted_by_votes_query(table.id)
     end
   end
