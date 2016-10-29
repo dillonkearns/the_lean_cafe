@@ -4,8 +4,11 @@ use Mix.Config
 # you can enable the server option below.
 config :the_lean_cafe, TheLeanCafe.Endpoint,
   http: [port: 4001],
-  server: true,
-  sql_sandbox: true
+  server: true
+
+config :the_lean_cafe, sql_sandbox: true
+
+config :hound, driver: "chrome_driver"
 
 # Print only warnings and errors during test
 config :logger, level: :warn

@@ -9,8 +9,6 @@ use Mix.Config
 config :the_lean_cafe,
   ecto_repos: [TheLeanCafe.Repo]
 
-config :hound, driver: "chrome_driver"
-
 # Configures the endpoint
 config :the_lean_cafe, TheLeanCafe.Endpoint,
   url: [host: "localhost"],
