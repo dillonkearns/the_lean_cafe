@@ -46,8 +46,9 @@ function joinChannel(channel) {
     if (payload.pollClosed) {
       closePoll()
     }
-    $(`#topics`).empty()
-    $(`#topics`).append(payload.topics)
+    $('.topics').empty()
+    $('#topics-incomplete').append(payload.incomplete)
+    $('#topics-complete').append(payload.complete)
     window.makeTopicsEditable()
   })
 

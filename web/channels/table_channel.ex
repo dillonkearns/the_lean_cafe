@@ -2,6 +2,8 @@ defmodule TheLeanCafe.TableChannel do
   use Phoenix.Channel
   alias TheLeanCafe.{Presence, Table, Topic, Repo, TopicView, RomanCounter}
 
+  import Ecto.Query
+
   intercept ["new_topic", "topics", "close_poll"]
 
   def join("table:" <> _room_name, params, socket) do
@@ -118,13 +120,14 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   defp topics_payload(table) do
-    %{topics: topics(table), pollClosed: table.state != "brainstorm"}
+    %{complete: topics(table, true), incomplete: topics(table, false), pollClosed: table.state != "brainstorm"}
   end
 
-  defp topics(table) do
+  defp topics(table, completed) do
     topics_and_dot_votes =
       table
       |> Table.topics_query
+      |> Ecto.Query.where([topic], topic.completed == ^completed)
       |> Topic.with_vote_counts
       |> Repo.all
 

@@ -19,7 +19,8 @@
               </span>
             </div>
           </form>
-          <ul id="topics" style="list-style: none;"></ul>
+          <ul id="topics-incomplete" class="topics" style="list-style: none;"></ul>
+          <ul id="topics-complete" class="topics" style="list-style: none;"></ul>
         </div>
       </div>
     </div>
