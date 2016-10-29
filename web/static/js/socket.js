@@ -45,6 +45,8 @@ function joinChannel(channel) {
   channel.on("topics", payload => {
     if (payload.pollClosed) {
       closePoll()
+    } else {
+      openPoll()
     }
     $('.topics').empty()
     $('#topics-incomplete').append(payload.incomplete)
@@ -86,8 +88,6 @@ function reconnectAs(username) {
 let chatInput = document.querySelector("#topic-input")
 let messagesContainer = document.querySelector("#topics")
 let topicInputForm = $(".topic-input-form")
-let currentTopicForm = $(".current-topic-form")
-let pollClosed = false
 
 $('#username-input').change(function () {
   reconnectAs($('#username-input').val())
@@ -146,9 +146,13 @@ document.querySelector("#complete-topic").onclick = function () {
 }
 
 function closePoll() {
-  $(topicInputForm).hide();
-  $(currentTopicForm).css('visibility', 'visible');
-  pollClosed = true
+  $(topicInputForm).hide()
+  $(".current-topic-form").show()
+}
+
+function openPoll() {
+  $(".topic-input-form").show()
+  $(".current-topic-form").hide()
 }
 
 function roomHash() {
