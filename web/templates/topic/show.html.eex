@@ -1,4 +1,4 @@
-<li><%= render "vote_button.html", topic: @topic, dot_votes: @dot_votes %>
+<li><%= if !@hide_votes, do: render "vote_button.html", topic: @topic, dot_votes: @dot_votes %>
 
   <span data-pk="<%= @topic.id %>" class="topic-name <%= if @topic.completed, do: "complete" %>">
     <%= @topic.name %>

@@ -1,3 +1,3 @@
 <%= for {topic, dot_votes} <- @topics_and_dot_votes do %>
-    <%= render "show.html", topic: topic, dot_votes: dot_votes %>
+    <%= render "show.html", topic: topic, dot_votes: dot_votes, hide_votes: @hide_votes %>
 <% end %>

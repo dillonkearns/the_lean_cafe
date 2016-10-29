@@ -128,7 +128,7 @@ defmodule TheLeanCafe.TableChannel do
       |> Topic.with_vote_counts
       |> Repo.all
 
-    Phoenix.View.render_to_string(TopicView, "index.html", topics_and_dot_votes: topics_and_dot_votes)
+    Phoenix.View.render_to_string(TopicView, "index.html", topics_and_dot_votes: topics_and_dot_votes, hide_votes: table.state == "brainstorm")
   end
 
   defp broadcast_users(socket) do
