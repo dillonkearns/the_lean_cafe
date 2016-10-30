@@ -19,9 +19,9 @@ defmodule TheLeanCafe.AddTopicsTest do
     assert topic_names == ["Something really boring", "Something kind of interesting", "Something really interesting"]
 
     change_state("Vote")
+    vote_for_topic_at(2)
+    vote_for_topic_at(2)
     vote_for_topic_at(1)
-    vote_for_topic_at(2)
-    vote_for_topic_at(2)
 
     assert topic_votes_and_names ==
       [{0, "Something really boring"}, {1, "Something kind of interesting"}, {2, "Something really interesting"}]
