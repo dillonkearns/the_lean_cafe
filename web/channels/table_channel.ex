@@ -69,13 +69,34 @@ defmodule TheLeanCafe.TableChannel do
     Presence.update(socket, socket.assigns.username, %{last_vote: [table.current_roman_timestamp, vote]})
 
     roman_result = Presence.list(socket)
-    |> RomanCounter.result(table.current_roman_timestamp)
+    |> RomanCounter.result(last_vote: table.current_roman_timestamp)
 
     if roman_result != :inconclusive do
       broadcast_roman_result(socket, roman_result)
       Table.reset_roman_vote(table)
     end
     broadcast_users(socket)
+    {:reply, :ok, socket}
+  end
+
+  defp handle("topic_vote", %{"vote" => vote}, socket, table) do
+    current_topic = table |> Table.current_topic |> Repo.one
+
+    Presence.update(socket, socket.assigns.username, %{topic_vote: [current_topic.id, vote]})
+
+    roman_result = Presence.list(socket)
+    |> RomanCounter.result(topic_vote: current_topic.id)
+
+    outstanding = RomanCounter.outstanding(Presence.list(socket), topic_vote: current_topic.id)
+    IO.puts "Got roman_result: #{roman_result}, outstanding = #{outstanding} @@@@@@@@@"
+
+
+    if roman_result == :- do
+      Repo.get!(Topic, current_topic.id)
+      |> Topic.complete
+      |> Repo.update!
+      broadcast_topics socket, table
+    end
     {:reply, :ok, socket}
   end
 
@@ -109,7 +130,7 @@ defmodule TheLeanCafe.TableChannel do
     current_roman_timestamp = Table.current_roman_timestamp(table_id)
     socket
     |> Presence.list
-    |> RomanCounter.users_to_json(current_roman_timestamp)
+    |> RomanCounter.users_to_json(last_vote: current_roman_timestamp)
   end
 
   defp topics_payload(table) do

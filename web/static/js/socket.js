@@ -123,6 +123,12 @@ function vote(voteType) {
   channel.push('roman_vote', {vote: voteType})
 }
 
+function topicVote(voteType) {
+  channel.push('topic_vote', {vote: voteType})
+}
+
+window.topicVote = topicVote
+
 function clearVotes() {
   channel.push('clear_votes')
 }
