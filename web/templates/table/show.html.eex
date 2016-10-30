@@ -43,7 +43,7 @@
       </div>
 
       <div style="padding-top: 50px;">
-        <a id="clear-votes" onclick="clearVotes()" class="btn btn-warning">Clear Votes</a>
+        <a id="clear-votes" onclick="clearVotes()" class="btn btn-warning">Clear Roman Votes</a>
       </div>
 
       <div style="padding-top: 50px;" class="current-topic-form">
@@ -52,7 +52,7 @@
 
 
       <br />
-      
+
       <%= render "_share_table.html", conn: @conn, table: @table %>
 
     </div>
