@@ -18,7 +18,43 @@ defmodule TheLeanCafe.AddTopicsTest do
     add_topic("Something kind of interesting")
     add_topic("Something really interesting")
 
-    assert visible_in_element?({:css, "#topics-incomplete li"}, ~r/Something really boring/)
+    assert topic_names == ["Something really boring", "Something kind of interesting", "Something really interesting"]
+
+    change_state("Vote")
+    vote_for_topic_at(1)
+    vote_for_topic_at(2)
+    vote_for_topic_at(2)
+
+    assert topic_votes_and_names ==
+      [{0, "Something really boring"}, {1, "Something kind of interesting"}, {2, "Something really interesting"}]
+
+    change_state("Discuss!")
+
+    assert topic_votes_and_names ==
+      [{2, "Something really interesting"}, {1, "Something kind of interesting"}, {0, "Something really boring"}]
+  end
+
+  def vote_for_topic_at(index) do
+    topics = find_all_elements(:css, "#topics-incomplete li")
+    topics |> Enum.at(index) |> find_within_element(:css, "a") |> click
+  end
+
+  def topic_names do
+    find_all_elements(:css, "#topics-incomplete li") |> Enum.map(&inner_text/1)
+  end
+
+  def change_state(link_text) do
+    find_element(:link_text, link_text) |> click
+  end
+
+  def topic_votes_and_names do
+    parse_int = fn(int_string) -> elem(Integer.parse(int_string), 0) end
+    vote_counts = find_all_elements(:css, "#topics-incomplete li a")
+    |> Enum.map(&inner_text/1)
+    |> Enum.map(parse_int)
+
+    topic_names = find_all_elements(:css, "#topics-incomplete li span") |> Enum.map(&inner_text/1)
+    Enum.zip(vote_counts, topic_names)
   end
 
   def add_topic(topic_name) do
