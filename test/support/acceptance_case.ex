@@ -4,6 +4,7 @@ defmodule TheLeanCafe.AcceptanceCase do
 
   using do
     quote do
+      @moduletag :acceptance
       use Hound.Helpers
 
       import TheLeanCafe.Router.Helpers

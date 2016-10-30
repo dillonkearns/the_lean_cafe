@@ -1,7 +1,6 @@
 defmodule TheLeanCafe.AddTopicsTest do
   use TheLeanCafe.AcceptanceCase
 
-  @tag :acceptance
   test "add topic" do
     grab_a_table
 
@@ -10,7 +9,6 @@ defmodule TheLeanCafe.AddTopicsTest do
     assert visible_in_element?({:css, "#topics-incomplete li"}, ~r/Some interesting topic/)
   end
 
-  @tag :acceptance
   test "add topics and vote" do
     grab_a_table
 
