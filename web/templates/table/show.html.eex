@@ -50,6 +50,11 @@
         <a id="complete-topic" class="btn btn-danger">Complete Topic</a>
       </div>
 
+
+      <br />
+      
+      <%= render "_share_table.html", conn: @conn, table: @table %>
+
     </div>
   </div>
   </div>

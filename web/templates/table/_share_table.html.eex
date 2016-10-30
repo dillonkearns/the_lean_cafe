@@ -1,0 +1,11 @@
+<form>
+  <span>Copy link to invite others:</span>
+  <div class="input-group topic-input-form">
+    <input type="text" class="form-control" id="share-table" value="<%= table_url(@conn, :show, Obfuscator.encode(@table.id)) %>" style="color: black; font-size: 10px;" />
+    <span id="add-topic-button" class="input-group-btn btn btn-default" alt="Copy to clipboard" data-clipboard-target="#share-table">
+      <span>
+        <img style="max-width: 15px;" src="/images/clippy.svg" alt="Copy to clipboard">
+      </span>
+    </span>
+  </div>
+</form>

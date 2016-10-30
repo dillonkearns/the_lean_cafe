@@ -1,6 +1,9 @@
 import {Socket} from "phoenix"
 import $ from "jquery"
 import toastr from "toastr"
+import clipboard from "clipboard"
+
+new clipboard('.btn')
 
 let socket
 
