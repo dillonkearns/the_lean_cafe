@@ -12,7 +12,7 @@
         <div>
           <form id="topic-input-form" >
             <div class=" input-group topic-input-form">
-              <input type="text" id="topic-input" class="form-control" placeholder="I want to discuss...">
+              <input type="text" id="topic-input" class="form-control" placeholder="I want to discuss..." autocomplete="off" />
               <span class="input-group-btn">
                 <input id="add-topic-button" class="btn btn-default" type="submit">Add Topic</input>
               </span>
