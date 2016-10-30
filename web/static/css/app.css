@@ -82,7 +82,7 @@ html, body, .container {
 }
 
 .complete {
-  text-decoration: line-through;
+  text-decoration: line-through !important;
   color: rgba(190, 190, 190, 0.9);
 }
 
