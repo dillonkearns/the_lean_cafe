@@ -90,6 +90,9 @@ defmodule TheLeanCafe.TableChannel do
     outstanding = RomanCounter.outstanding(Presence.list(socket), topic_vote: current_topic.id)
     IO.puts "Got roman_result: #{roman_result}, outstanding = #{outstanding} @@@@@@@@@"
 
+    if roman_result != :inconclusive do
+      broadcast_roman_result(socket, roman_result)
+    end
 
     if roman_result == :- do
       Repo.get!(Topic, current_topic.id)
@@ -128,6 +131,7 @@ defmodule TheLeanCafe.TableChannel do
   defp connected_users(socket = %{topic: "table:" <> table_hashid}) do
     table_id = Obfuscator.decode(table_hashid)
     current_roman_timestamp = Table.current_roman_timestamp(table_id)
+
     socket
     |> Presence.list
     |> RomanCounter.users_to_json(last_vote: current_roman_timestamp)
