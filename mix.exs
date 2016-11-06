@@ -49,6 +49,7 @@ defmodule TheLeanCafe.Mixfile do
      {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:mix_test_watch, "~> 0.2", only: :dev},
+     {:ex_unit_notifier, "~> 0.1", only: :test},
      {:ex_machina, "~> 1.0"},
      {:gettext, "~> 0.11"},
      {:hound, "~> 1.0", only: :test},
