@@ -73,4 +73,15 @@ defmodule TheLeanCafe.TableTest do
     end
 
   end
+
+  test "clear votes" do
+    table = Repo.insert!(%Table{topic_votes: %{"existingvoteuser" => "-"}})
+    assert table.topic_votes == %{"existingvoteuser" => "-"}
+
+    updated_table =
+      table
+      |> Table.clear_votes
+      |> Repo.update!
+    assert updated_table.topic_votes == %{}
+    end
 end

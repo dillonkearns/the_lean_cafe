@@ -26,6 +26,11 @@ defmodule TheLeanCafe.Table do
     |> cast(%{topic_votes: updated_topic_votes}, ["topic_votes"])
   end
 
+  def clear_votes(table) do
+    table
+    |> cast(%{topic_votes: %{}}, ["topic_votes"])
+  end
+
   def get_by_hashid(table_hashid) do
     TheLeanCafe.Repo.get!(Table, Obfuscator.decode(table_hashid))
   end
