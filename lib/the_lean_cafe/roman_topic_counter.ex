@@ -1,11 +1,15 @@
 defmodule TheLeanCafe.RomanTopicCounter do
 
-  defp string_to_value(vote) do
-    case vote do
-      "+" -> 1
-      "-" -> -1
-      "" -> 0
-      "=" -> 0
+  def result(vote_map) do
+    vote_value = value(vote_map)
+    outstanding_count = outstanding(vote_map)
+    if conclusive?(vote_value, outstanding_count) do
+      :inconclusive
+    else
+      case vote_value do
+        n when n > 0 -> :+
+        n when n <= 0 -> :-
+      end
     end
   end
 
@@ -26,16 +30,12 @@ defmodule TheLeanCafe.RomanTopicCounter do
     |> Enum.count
   end
 
-  def result(vote_map) do
-    vote_value = value(vote_map)
-    outstanding_count = outstanding(vote_map)
-    if conclusive?(vote_value, outstanding_count) do
-      :inconclusive
-    else
-      case vote_value do
-        n when n > 0 -> :+
-        n when n <= 0 -> :-
-      end
+  defp string_to_value(vote) do
+    case vote do
+      "+" -> 1
+      "-" -> -1
+      "" -> 0
+      "=" -> 0
     end
   end
 
