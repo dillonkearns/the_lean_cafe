@@ -36,4 +36,41 @@ defmodule TheLeanCafe.TableTest do
     assert current.id == incomplete_topic.id
   end
 
+  describe "count vote" do
+    test "adds new votes" do
+      table = Repo.insert!(%Table{})
+      assert table.topic_votes == %{}
+
+      updated_table =
+        table
+        |> Table.count_vote("username123", "+")
+        |> Repo.update!
+      assert updated_table.topic_votes == %{"username123" => "+"}
+    end
+
+    test "keeps pre-existing votes" do
+      table = Repo.insert!(%Table{topic_votes: %{"existinguser" => "-"}})
+      assert table.topic_votes == %{"existinguser" => "-"}
+
+      updated_table =
+        table
+        |> Table.count_vote("newvoteuser", "+")
+        |> Repo.update!
+      assert updated_table.topic_votes ==
+        %{"existinguser" => "-", "newvoteuser" => "+"}
+    end
+
+    test "overwrites old votes" do
+      table = Repo.insert!(%Table{topic_votes: %{"existingvoteuser" => "-"}})
+      assert table.topic_votes == %{"existingvoteuser" => "-"}
+
+      updated_table =
+        table
+        |> Table.count_vote("existingvoteuser", "+")
+        |> Repo.update!
+      assert updated_table.topic_votes ==
+        %{"existingvoteuser" => "+"}
+    end
+
+  end
 end

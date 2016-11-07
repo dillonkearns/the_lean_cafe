@@ -6,6 +6,7 @@ defmodule TheLeanCafe.Table do
     has_many :topics, Topic
     field :state, :string, default: "brainstorm"
     field :current_roman_timestamp, :integer, default: 0
+    field :topic_votes, :map, default: %{}
 
     timestamps()
   end
@@ -17,6 +18,12 @@ defmodule TheLeanCafe.Table do
     struct
     |> cast(params, ["state"])
     |> validate_required([])
+  end
+
+  def count_vote(struct, username, vote) do
+    updated_topic_votes = Map.merge(struct.topic_votes, %{username => vote})
+    struct
+    |> cast(%{topic_votes: updated_topic_votes}, ["topic_votes"])
   end
 
   def get_by_hashid(table_hashid) do
