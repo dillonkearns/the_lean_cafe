@@ -1,6 +1,6 @@
 defmodule TheLeanCafe.TableChannel do
   use Phoenix.Channel
-  alias TheLeanCafe.{Presence, Table, Topic, Repo, TopicView, RomanCounter}
+  alias TheLeanCafe.{Presence, Table, Topic, Repo, TopicView, RomanCounter, RomanTopicCounter}
 
   import Ecto.Query
 
@@ -79,19 +79,19 @@ defmodule TheLeanCafe.TableChannel do
     {:reply, :ok, socket}
   end
 
-  defp handle("topic_vote", %{"vote" => vote}, socket, table) do
+  defp handle("topic_vote", %{"vote" => vote}, socket = %{assigns: %{username: username}}, table) do
     current_topic = table |> Table.current_topic |> Repo.one
 
-    Presence.update(socket, socket.assigns.username, %{topic_vote: [current_topic.id, vote]})
+    # Presence.update(socket, socket.assigns.username, %{topic_vote: [current_topic.id, vote]})
+    table = Table.count_vote(table, username, vote) |> Repo.update!
 
-    roman_result = Presence.list(socket)
-    |> RomanCounter.result(topic_vote: current_topic.id)
-
-    outstanding = RomanCounter.outstanding(Presence.list(socket), topic_vote: current_topic.id)
-    IO.puts "Got roman_result: #{roman_result}, outstanding = #{outstanding} @@@@@@@@@"
+    topic_votes = Presence.topic_votes(socket, table)
+    roman_result =
+      RomanTopicCounter.result(topic_votes)
 
     if roman_result != :inconclusive do
       broadcast_roman_result(socket, roman_result)
+      Table.clear_votes(table) |> Repo.update!
     end
 
     if roman_result == :- do
@@ -100,6 +100,8 @@ defmodule TheLeanCafe.TableChannel do
       |> Repo.update!
       broadcast_topics socket, table
     end
+    broadcast_users(socket)
+
     {:reply, :ok, socket}
   end
 
@@ -130,11 +132,10 @@ defmodule TheLeanCafe.TableChannel do
 
   defp connected_users(socket = %{topic: "table:" <> table_hashid}) do
     table_id = Obfuscator.decode(table_hashid)
-    current_roman_timestamp = Table.current_roman_timestamp(table_id)
+    table = Repo.get! Table, table_id
 
-    socket
-    |> Presence.list
-    |> RomanCounter.users_to_json(last_vote: current_roman_timestamp)
+    Presence.topic_votes(socket, table)
+    |> Enum.map(fn ({username, vote}) -> %{username: username, last_vote: vote} end)
   end
 
   defp topics_payload(table) do

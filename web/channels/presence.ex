@@ -74,4 +74,15 @@ defmodule TheLeanCafe.Presence do
   """
   use Phoenix.Presence, otp_app: :the_lean_cafe,
                         pubsub_server: TheLeanCafe.PubSub
+  def topic_votes(socket, table) do
+    for {username, _meta} <- list(socket), into: %{} do
+      topic_vote = table.topic_votes[username]
+      if topic_vote do
+        {username, topic_vote}
+      else
+        {username, ""}
+      end
+    end
+  end
+
 end

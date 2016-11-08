@@ -28,9 +28,9 @@
       <div class="row">
         <div class="btn-group column" role="group" id="roman-buttons">
 
-          <a id="vote-up" class="btn-default col-sm-4 roman-vote-button" onclick="vote('+')"><span class="glyphicon glyphicon-thumbs-up"></span></a>
-          <a id="vote-side" class="btn-default col-sm-4 roman-vote-button" onclick="vote('=')"><span class="glyphicon glyphicon-hand-left"></span></a>
-          <a id="vote-down" class="btn-default col-sm-4 roman-vote-button" onclick="vote('-')"><span class="glyphicon glyphicon-thumbs-down"></span></a>
+          <a id="vote-up" class="btn-default col-sm-4 roman-vote-button" onclick="topicVote('+')"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+          <a id="vote-side" class="btn-default col-sm-4 roman-vote-button" onclick="topicVote('=')"><span class="glyphicon glyphicon-hand-left"></span></a>
+          <a id="vote-down" class="btn-default col-sm-4 roman-vote-button" onclick="topicVote('-')"><span class="glyphicon glyphicon-thumbs-down"></span></a>
         </div>
 
         <div id="username-group" class="input-group" style="max-width: 160px">
