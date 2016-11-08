@@ -65,20 +65,6 @@ defmodule TheLeanCafe.TableChannel do
     {:reply, :ok, socket}
   end
 
-  defp handle("roman_vote", %{"vote" => vote}, socket, table) do
-    Presence.update(socket, socket.assigns.username, %{last_vote: [table.current_roman_timestamp, vote]})
-
-    roman_result = Presence.list(socket)
-    |> RomanCounter.result(last_vote: table.current_roman_timestamp)
-
-    if roman_result != :inconclusive do
-      broadcast_roman_result(socket, roman_result)
-      Table.reset_roman_vote(table)
-    end
-    broadcast_users(socket)
-    {:reply, :ok, socket}
-  end
-
   defp handle("topic_vote", %{"vote" => vote}, socket = %{assigns: %{username: username}}, table) do
     current_topic = table |> Table.current_topic |> Repo.one
 
