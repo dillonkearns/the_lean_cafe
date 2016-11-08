@@ -16,6 +16,7 @@ defmodule TheLeanCafe.AddTopicsTest do
     add_topic("Something kind of interesting")
     add_topic("Something really interesting")
 
+    :timer.sleep(50)
     assert topic_names == ["Something really boring", "Something kind of interesting", "Something really interesting"]
 
     change_state("Vote")
