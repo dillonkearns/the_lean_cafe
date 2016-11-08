@@ -3,7 +3,7 @@ defmodule TheLeanCafe.Repo.Migrations.AddTopicVoteToTables do
 
   def change do
     alter table(:tables) do
-      add :topic_votes, :map, null: false
+      add :topic_votes, :map
     end
   end
 end
