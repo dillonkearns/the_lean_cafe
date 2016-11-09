@@ -20,6 +20,15 @@ defmodule TheLeanCafe.Router do
     resources "/tables", TableController, param: "hashid"
   end
 
+  scope "/auth", TheLeanCafe do
+    pipe_through :browser
+
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback
+    post "/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", TheLeanCafe do
   #   pipe_through :api

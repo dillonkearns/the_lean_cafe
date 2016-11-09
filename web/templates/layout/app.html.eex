@@ -40,7 +40,7 @@
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
       <main role="main" class="row fill">
-        <%= render @view_module, @view_template, assigns %>
+        <%= unless @view_template == "request.html" do render @view_module, @view_template, assigns end %>
       </main>
 
     </div> <!-- /container -->

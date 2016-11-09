@@ -15,7 +15,7 @@ defmodule TheLeanCafe.TableController do
 
   def new(conn, _params) do
     changeset = Table.changeset(%Table{})
-    render(conn, "new.html", changeset: changeset)
+    render(conn, "new.html", changeset: changeset, current_user: get_session(conn, :current_user))
   end
 
   def create(conn, _) do
@@ -32,7 +32,7 @@ defmodule TheLeanCafe.TableController do
 
   def show(conn, %{"hashid" => hashid}) do
     table = unobfuscate(hashid)
-    render(conn, "show.html", table: table)
+    render(conn, "show.html", table: table, current_user: get_session(conn, :current_user))
   end
 
 end

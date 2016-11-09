@@ -1,0 +1,2 @@
+<img src="<%= @current_user.avatar %>" class="img-circle" style="max-width: 60px;"/>
+<%= @current_user.nickname %>

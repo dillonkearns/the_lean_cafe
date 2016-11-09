@@ -26,6 +26,15 @@
 
     <div class="col-sm-3 col-lg-3">
       <div class="row">
+        <div>
+
+          <a class="btn btn-primary btn-lg" href="/auth/github">
+            <i class="fa fa-github"></i>
+            Sign in with GitHub
+          </a>
+          <%= if @current_user do render "user.html", current_user: @current_user end %>
+          <%= if @current_user do link "Logout", to: auth_path(@conn, :delete), method: :delete, class: "btn btn-danger" end %>
+        </div>
         <div class="btn-group column" role="group" id="roman-buttons">
 
           <a id="vote-up" class="btn-default col-sm-4 roman-vote-button" onclick="topicVote('+')"><span class="glyphicon glyphicon-thumbs-up"></span></a>

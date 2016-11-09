@@ -2,6 +2,7 @@
   <div>
     <%= render "form.html", changeset: @changeset,
     action: table_path(@conn, :create) %>
+     <%= if @current_user do render "user.html", current_user: @current_user end %>
     <h1 style="font-family: Herr Von Muellerhoff; color: white; font-size: 90px; font-weight: 400; position: absolute; bottom: 20px; left: 20px;">The Lean Cafe</h1>
 
   </div>

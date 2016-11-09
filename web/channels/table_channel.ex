@@ -1,6 +1,6 @@
 defmodule TheLeanCafe.TableChannel do
   use Phoenix.Channel
-  alias TheLeanCafe.{Presence, Table, Topic, Repo, TopicView, RomanCounter, RomanTopicCounter}
+  alias TheLeanCafe.{Presence, Table, Topic, Repo, TopicView, RomanTopicCounter}
 
   import Ecto.Query
 
