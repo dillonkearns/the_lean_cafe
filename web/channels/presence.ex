@@ -76,13 +76,9 @@ defmodule TheLeanCafe.Presence do
                         pubsub_server: TheLeanCafe.PubSub
 
   def topic_votes(socket, table) do
-    for {username, _meta} <- list(socket), into: %{} do
-      topic_vote = table.topic_votes[username]
-      if topic_vote do
-        {username, topic_vote}
-      else
-        {username, ""}
-      end
+    for {username, %{metas: metas}} <- TheLeanCafe.Presence.list(socket), into: [] do
+      topic_vote = table.topic_votes[username] || ""
+      %{username: username, last_vote: topic_vote, avatar: Enum.at(metas, 0).avatar}
     end
   end
 

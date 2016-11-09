@@ -71,4 +71,5 @@
 
 
   <input type="hidden" name="table-id" id="table-id" value="<%= obfuscate(@table) %>">
+  <input type="hidden" name="user-nickname" data-avatar="<%= if @current_user do @current_user.avatar end %>" id="user-nickname" value="<%= if @current_user do @current_user.nickname end %>">
 </div>

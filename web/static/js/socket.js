@@ -7,14 +7,18 @@ new clipboard('.btn')
 
 let socket
 
+function getAvatar() {
+  return $('#user-nickname').data('avatar')
+}
+
 function createChannel(username) {
-  socket = new Socket("/socket", {params: {username: username, table_hash: roomHash()}})
+  socket = new Socket("/socket", {params: {username: username, avatar: getAvatar(), table_hash: roomHash()}})
   socket.connect()
   return socket.channel(`table:${roomHash()}`, {})
 }
 
 function myUsername() {
-  return $('#username-input').val() || "anonymous"
+  return $('#user-nickname').val() || $('#username-input').val() || "anonymous"
 }
 
 function highlightMyVote(lastVote) {
@@ -106,8 +110,12 @@ function renderVote(vote) {
   return `<span class="glyphicon ${icon}" />`
 }
 
+function avatarHtml(avatar) {
+  return `<img src="${avatar}" class="img-circle" style="max-width: 35px;"/>`
+}
+
 function usernamesHtml(usernames) {
-  return usernames.map(user => `<li>${renderVote(user.last_vote)} @${user.username}</li>`).join('')
+  return usernames.map(user => `<li>${renderVote(user.last_vote)} ${avatarHtml(user.avatar)}&nbsp;${user.username}</li>`).join('')
 }
 
 function renderUsernames(usernames) {

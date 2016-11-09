@@ -107,7 +107,8 @@ defmodule TheLeanCafe.TableChannel do
 
   defp track_new_user(socket) do
     Presence.track(socket, socket.assigns.username, %{
-      joined_at: :os.system_time(:milli_seconds)
+      joined_at: :os.system_time(:milli_seconds),
+      avatar: Map.get(socket.assigns, :avatar)
     })
     broadcast_users(socket)
   end
@@ -121,7 +122,6 @@ defmodule TheLeanCafe.TableChannel do
     table = Repo.get! Table, table_id
 
     Presence.topic_votes(socket, table)
-    |> Enum.map(fn ({username, vote}) -> %{username: username, last_vote: vote} end)
   end
 
   defp topics_payload(table) do
