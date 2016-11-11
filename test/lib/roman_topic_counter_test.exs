@@ -9,134 +9,68 @@ defmodule TheLeanCafe.RomanTopicCounterTest do
   end
 
   test "counts votes from votes metadata" do
-    votes_list = ["+"]
-    assert RomanTopicCounter.value(votes_list) == 1
+    assert RomanTopicCounter.value(["+"]) == 1
   end
 
   test "counts downvotes" do
-    votes_list = ["-"]
-    assert RomanTopicCounter.value(votes_list) == -1
+    assert RomanTopicCounter.value(["-"]) == -1
   end
 
   test "values neutral votes" do
-    votes_list = ["="]
-    assert RomanTopicCounter.value(votes_list) == 0
+    assert RomanTopicCounter.value(["="]) == 0
   end
 
   test "values mixed votes" do
-    votes_list = [
-      "+",
-      "+",
-      "=",
-    ]
-    assert RomanTopicCounter.value(votes_list) == 2
+    assert RomanTopicCounter.value(["+", "+", "="]) == 2
   end
 
   test "result is upvote" do
-    votes_list = [
-      "+",
-      "+"
-    ]
-    assert RomanTopicCounter.result(votes_list) == :+
+    assert RomanTopicCounter.result(["+", "+"]) == :+
   end
 
   test "result single user" do
-    votes_list = [
-      "+"
-    ]
-    assert RomanTopicCounter.result(votes_list) == :+
+    assert RomanTopicCounter.result(["+"]) == :+
   end
 
   test "result downvote" do
-    votes_list = [
-      "-",
-      "-"
-    ]
-    assert RomanTopicCounter.result(votes_list) == :-
+    assert RomanTopicCounter.result(["-", "-"]) == :-
   end
 
   test "result tie" do
-    votes_list = [
-      "=",
-      "="
-    ]
-    assert RomanTopicCounter.result(votes_list) == :-
+    assert RomanTopicCounter.result(["=", "="]) == :-
   end
 
   test "all outstanding" do
-    votes_list = [
-      "",
-      "",
-      "",
-    ]
-    assert RomanTopicCounter.outstanding(votes_list) == 3
+    assert RomanTopicCounter.outstanding(["", "", "",]) == 3
   end
 
   test "some outstanding" do
-    votes_list = [
-      "=",
-      "",
-      "",
-    ]
-    assert RomanTopicCounter.outstanding(votes_list) == 2
+    assert RomanTopicCounter.outstanding(["=", "", "",]) == 2
   end
 
   test "result all outstanding" do
-    votes_list = [
-      "",
-      "",
-      "",
-    ]
-    assert RomanTopicCounter.result(votes_list) == :inconclusive
+    assert RomanTopicCounter.result(["", "", "",]) == :inconclusive
   end
 
   test "result insufficient votes" do
-    votes_list = [
-      "+",
-      "",
-      "",
-    ]
-    assert RomanTopicCounter.result(votes_list) == :inconclusive
+    assert RomanTopicCounter.result(["+", "", "",]) == :inconclusive
   end
 
   test "result tie with one outstanding" do
-    votes_list = [
-      "+",
-      "",
-      "-",
-    ]
-    assert RomanTopicCounter.result(votes_list) == :inconclusive
+    assert RomanTopicCounter.result(["+", "", "-",]) == :inconclusive
   end
 
   test "result with not enough outstanding to change outcome" do
-    votes_list = [
-      "+",
-      "",
-      "+",
-    ]
-    assert RomanTopicCounter.result(votes_list) == :+
+    assert RomanTopicCounter.result(["+", "", "+",]) == :+
   end
 
   test "result with enough outstanding to change outcome" do
-    votes_list = [
-      "+",
-      "",
-      "",
-      "",
-      "+",
-    ]
-    assert RomanTopicCounter.result(votes_list) == :inconclusive
+    assert RomanTopicCounter.result(["+", "", "", "", "+",]) == :inconclusive
   end
 
   test "result with enough outstanding to tie outcome" do
-    votes_list = [
-      "+",
-      "",
-      "",
-      "+",
-    ]
     # TODO: should this be `:inconclusive`?
-    assert RomanTopicCounter.result(votes_list) == :+
+    assert RomanTopicCounter.result(["+", "", "", "+",]) == :+
   end
 
 end
