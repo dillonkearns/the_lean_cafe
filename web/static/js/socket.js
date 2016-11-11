@@ -2,6 +2,7 @@ import {Socket} from "phoenix"
 import $ from "jquery"
 import toastr from "toastr"
 import clipboard from "clipboard"
+import moment from "moment"
 
 new clipboard('.btn')
 
@@ -36,8 +37,7 @@ function highlightMyVote(lastVote) {
 
 function joinChannel(channel) {
   channel.on('countdown_to', payload => {
-    console.log('countdown_to')
-    console.log(payload)
+    window.countdown_to = payload.countdown_to
   })
 
   channel.on("new_topic", payload => {
@@ -195,5 +195,33 @@ window.dotVote = function (id) {
 function addTopic(topicHtml) {
   $(`#topics`).append(topicHtml)
 }
+
+function startTimerRenderLoop() {
+  setInterval(function () {
+    renderTimerIfSet()
+  }, 1000)
+}
+
+function renderTimerIfSet() {
+  if (window.countdown_to) {
+    let secondsRemaining = moment(window.countdown_to).diff(moment(), 'seconds')
+    if (secondsRemaining < 0) {
+      renderTimeRemaining(0, 0)
+    } else {
+      let minutes = parseInt(secondsRemaining / 60)
+      let seconds = parseInt(secondsRemaining % 60)
+
+      minutes = minutes < 10 ? "0" + minutes : minutes
+      seconds = seconds < 10 ? "0" + seconds : seconds
+      renderTimeRemaining(minutes, seconds)
+    }
+  }
+}
+
+function renderTimeRemaining(minutes, seconds) {
+  $('#timer').text(`${minutes}:${seconds}`)
+}
+
+startTimerRenderLoop()
 
 export default socket
