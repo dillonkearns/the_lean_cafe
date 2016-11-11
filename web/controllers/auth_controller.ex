@@ -25,7 +25,6 @@ defmodule TheLeanCafe.AuthController do
         nickname: conn.assigns.ueberauth_auth.info.nickname}
 
     conn
-    |> put_flash(:success, "Authenticaed!")
     |> put_session(:current_user, user)
     |> redirect(to: "/")
   end
