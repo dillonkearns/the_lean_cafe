@@ -18,6 +18,7 @@ defmodule TheLeanCafe.TableChannel do
     push socket, "topics", topics_payload(table)
     states_html = Phoenix.View.render_to_string(TheLeanCafe.TableView, "_state_group.html", %{current_state: table.state})
     push socket, "states", %{states_html: states_html}
+    push socket, "countdown_to", countdown_to_payload(table)
     {:noreply, socket}
   end
 
@@ -105,10 +106,19 @@ defmodule TheLeanCafe.TableChannel do
       |> Table.start_timer
       |> Repo.update!
 
-    time_string = Timex.format!(table.countdown_to, "%FT%T%:z", :strftime)
-
-    broadcast! socket, "countdown_to", %{countdown_to: time_string}
+    broadcast! socket, "countdown_to", countdown_to_payload(table)
     {:reply, :ok, socket}
+  end
+
+  def countdown_to_payload(%Table{countdown_to: countdown_to}) do
+    time_string =
+      if countdown_to do
+        Timex.format!(countdown_to, "%FT%T%:z", :strftime)
+      else
+        ""
+      end
+
+    %{countdown_to: time_string}
   end
 
   defp handle("change_state", %{"to_state" => to_state}, socket, table) do

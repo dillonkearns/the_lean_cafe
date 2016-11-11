@@ -2,9 +2,10 @@ defmodule TheLeanCafe.Channels.TableChannelTest do
   use TheLeanCafe.ChannelCase
 
   import TheLeanCafe.Factory
+  alias TheLeanCafe.{Table, Repo}
 
   setup do
-    table = TheLeanCafe.Repo.insert!(%TheLeanCafe.Table{})
+    table = Repo.insert!(%Table{})
     {:ok, socket} = connect(TheLeanCafe.UserSocket, %{})
     {:ok, socket: socket, table: table}
   end
@@ -54,6 +55,19 @@ defmodule TheLeanCafe.Channels.TableChannelTest do
     countdown_to = Repo.get!(TheLeanCafe.Table, table.id).countdown_to
     assert_times_equal countdown_to, Timex.parse!(countdown_response.countdown_to, "%FT%T%:z", :strftime)
     assert_n_minutes_later(now, countdown_to, 4)
+  end
+
+  test "sends countdown_to message when joining a room with a timer", %{socket: socket, table: table} do
+    table
+    |> Table.start_timer
+    |> Repo.update!
+
+    {:ok, _reply, _socket} = subscribe_and_join_table(socket, table)
+
+    assert_push "countdown_to", countdown_response
+
+    countdown_to = Repo.get!(TheLeanCafe.Table, table.id).countdown_to
+    assert_times_equal countdown_to, Timex.parse!(countdown_response.countdown_to, "%FT%T%:z", :strftime)
   end
 
   def assert_n_minutes_later(earlier_time, later_time, n) do
