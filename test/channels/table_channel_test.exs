@@ -10,8 +10,7 @@ defmodule TheLeanCafe.Channels.TableChannelTest do
   end
 
   test "adds topic after receiving new_topic", %{socket: socket, table: table} do
-    table_hashid = TheLeanCafe.Table.hashid(table)
-    {:ok, _reply, socket} = subscribe_and_join(socket, "table:#{table_hashid}", %{})
+    {:ok, _reply, socket} = subscribe_and_join_table(socket, table)
     assert_push "topics", %{incomplete: "", complete: ""}
     topic_count = length(TheLeanCafe.Repo.all(TheLeanCafe.Topic))
 
@@ -24,8 +23,7 @@ defmodule TheLeanCafe.Channels.TableChannelTest do
   end
 
   test "renames topic", %{socket: socket, table: table} do
-    table_hashid = TheLeanCafe.Table.hashid(table)
-    {:ok, _reply, socket} = subscribe_and_join(socket, "table:#{table_hashid}", %{})
+    {:ok, _reply, socket} = subscribe_and_join_table(socket, table)
     topic = insert(:topic, table: table)
 
     ref = push socket, "rename_topic", %{id: topic.id, body: "New topic text"}
@@ -36,14 +34,18 @@ defmodule TheLeanCafe.Channels.TableChannelTest do
   end
 
   test "changes state", %{socket: socket, table: table} do
-    table_hashid = TheLeanCafe.Table.hashid(table)
-    {:ok, _reply, socket} = subscribe_and_join(socket, "table:#{table_hashid}", %{})
+    {:ok, _reply, socket} = subscribe_and_join_table(socket, table)
 
     ref = push socket, "change_state", %{to_state: "vote"}
     assert_reply ref, :ok
     assert_broadcast "states", states
     assert states.states_html =~ ~r(<a[^>]*selected[^<]*Vote.*</a>)s
     assert Repo.get!(TheLeanCafe.Table, table.id).state == "vote"
+  end
+
+  defp subscribe_and_join_table(socket, table) do
+    table_hashid = TheLeanCafe.Table.hashid(table)
+    subscribe_and_join(socket, "table:#{table_hashid}", %{})
   end
 
 end
