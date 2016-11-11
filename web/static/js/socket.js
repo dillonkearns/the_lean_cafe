@@ -211,15 +211,17 @@ function renderTimerIfSet() {
       let minutes = parseInt(secondsRemaining / 60)
       let seconds = parseInt(secondsRemaining % 60)
 
-      minutes = minutes < 10 ? "0" + minutes : minutes
-      seconds = seconds < 10 ? "0" + seconds : seconds
       renderTimeRemaining(minutes, seconds)
     }
   }
 }
 
 function renderTimeRemaining(minutes, seconds) {
-  $('#timer').text(`${minutes}:${seconds}`)
+  $('#timer').text(`${zeroPad(minutes)}:${zeroPad(seconds)}`)
+}
+
+function zeroPad(n) {
+  return n < 10 ? "0" + n : n
 }
 
 startTimerRenderLoop()
