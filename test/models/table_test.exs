@@ -83,5 +83,26 @@ defmodule TheLeanCafe.TableTest do
       |> Table.clear_votes
       |> Repo.update!
     assert updated_table.topic_votes == %{}
-    end
+  end
+
+  test "start_timer" do
+    table =
+      Repo.insert!(%Table{})
+      |> Table.start_timer
+      |> Repo.update!
+
+    now = Timex.now
+
+    assert_n_minutes_later(now, table.countdown_to, 4)
+  end
+
+  def assert_n_minutes_later(earlier_time, later_time, n) do
+    diff_seconds = Timex.diff(later_time, earlier_time, :seconds)
+    threshold = 5
+    expected_diff_seconds = n * 60
+    off_by_minutes = (diff_seconds - expected_diff_seconds) / 60
+    assert_in_delta(diff_seconds, expected_diff_seconds, threshold,
+      "Off by #{off_by_minutes} minutes")
+  end
+
 end

@@ -99,6 +99,18 @@ defmodule TheLeanCafe.TableChannel do
     {:reply, :ok, socket}
   end
 
+  defp handle("start_timer", _params, socket, table) do
+    table =
+      table
+      |> Table.start_timer
+      |> Repo.update!
+
+    time_string = Timex.format!(table.countdown_to, "%FT%T%:z", :strftime)
+
+    broadcast! socket, "countdown_to", %{countdown_to: time_string}
+    {:reply, :ok, socket}
+  end
+
   defp handle("change_state", %{"to_state" => to_state}, socket, table) do
     table = table |> Table.changeset(%{state: to_state}) |> Repo.update!
     states_html = Phoenix.View.render_to_string(TheLeanCafe.TableView, "_state_group.html", %{current_state: table.state})

@@ -31,7 +31,7 @@ defmodule TheLeanCafe.Mixfile do
 
   def default_app_list do
     [:ex_machina, :phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                   :phoenix_ecto, :postgrex, :ueberauth_github]
+                   :phoenix_ecto, :postgrex, :ueberauth_github, :timex]
   end
 
   # Specifies which paths to compile per environment.
@@ -55,6 +55,8 @@ defmodule TheLeanCafe.Mixfile do
      {:gettext, "~> 0.11"},
      {:hound, "~> 1.0", only: :test},
      {:cowboy, "~> 1.0"},
+     {:timex, "~> 3.0"},
+     {:timex_ecto, "~> 3.0"},
      {:hashids, "~> 2.0"}]
   end
 

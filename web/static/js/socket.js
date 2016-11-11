@@ -35,6 +35,11 @@ function highlightMyVote(lastVote) {
 }
 
 function joinChannel(channel) {
+  channel.on('countdown_to', payload => {
+    console.log('countdown_to')
+    console.log(payload)
+  })
+
   channel.on("new_topic", payload => {
     addTopic(payload.body)
   })
@@ -142,6 +147,13 @@ function clearVotes() {
 }
 
 window.clearVotes = clearVotes
+
+function startTimer() {
+  console.log('startTimer')
+  channel.push('start_timer')
+}
+
+window.startTimer = startTimer
 window.vote = vote
 
 $('#topic-input-form').submit(function(ev) {

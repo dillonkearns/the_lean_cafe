@@ -7,6 +7,7 @@ defmodule TheLeanCafe.Table do
     field :state, :string, default: "brainstorm"
     field :current_roman_timestamp, :integer, default: 0
     field :topic_votes, :map, default: %{}
+    field :countdown_to, Timex.Ecto.DateTime
 
     timestamps()
   end
@@ -24,6 +25,12 @@ defmodule TheLeanCafe.Table do
     updated_topic_votes = Map.merge(struct.topic_votes, %{username => vote})
     struct
     |> cast(%{topic_votes: updated_topic_votes}, ["topic_votes"])
+  end
+
+  def start_timer(table) do
+    countdown_to = Timex.shift(Timex.now, minutes: +4)
+    table
+    |> cast(%{countdown_to: countdown_to}, ["countdown_to"])
   end
 
   def clear_votes(table) do
