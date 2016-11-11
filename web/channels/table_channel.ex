@@ -73,7 +73,9 @@ defmodule TheLeanCafe.TableChannel do
 
     topic_votes = Presence.topic_votes(socket, table)
     roman_result =
-      RomanTopicCounter.result(topic_votes)
+      topic_votes
+      |> RomanTopicCounter.votes_to_array
+      |> RomanTopicCounter.result
 
     if roman_result != :inconclusive do
       broadcast_roman_result(socket, roman_result)

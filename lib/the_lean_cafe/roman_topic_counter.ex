@@ -15,7 +15,6 @@ defmodule TheLeanCafe.RomanTopicCounter do
 
   def value(vote_map) do
     vote_map
-    |> Enum.map(fn({_user, vote}) -> vote end )
     |> Enum.map(&(string_to_value(&1)))
     |> Enum.sum
   end
@@ -26,8 +25,13 @@ defmodule TheLeanCafe.RomanTopicCounter do
 
   def outstanding(vote_map) do
     vote_map
-    |> Enum.filter(fn({_username, vote}) -> vote == "" end)
+    |> Enum.filter(fn(vote) -> vote == "" end)
     |> Enum.count
+  end
+
+  def votes_to_array(votes_structure) do
+    votes_structure
+    |> Enum.map(&(&1.last_vote))
   end
 
   defp string_to_value(vote) do

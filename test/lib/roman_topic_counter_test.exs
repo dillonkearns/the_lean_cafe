@@ -3,135 +3,140 @@ defmodule TheLeanCafe.RomanTopicCounterTest do
   use ExUnit.Case
   alias TheLeanCafe.RomanTopicCounter
 
-  test "counts votes from presence metadata" do
-    presence_list = %{"fred" => "+"}
-    assert RomanTopicCounter.value(presence_list) == 1
+  test "converts meta data structure to array of votes" do
+    votes_structure = [%{avatar: "", last_vote: "-", username: "user1"}, %{avatar: "", last_vote: "+", username: "user2"}]
+    assert RomanTopicCounter.votes_to_array(votes_structure) == ["-", "+"]
+  end
+
+  test "counts votes from votes metadata" do
+    votes_list = ["+"]
+    assert RomanTopicCounter.value(votes_list) == 1
   end
 
   test "counts downvotes" do
-    presence_list = %{"wilma" => "-"}
-    assert RomanTopicCounter.value(presence_list) == -1
+    votes_list = ["-"]
+    assert RomanTopicCounter.value(votes_list) == -1
   end
 
   test "values neutral votes" do
-    presence_list = %{"fred" => "="}
-    assert RomanTopicCounter.value(presence_list) == 0
+    votes_list = ["="]
+    assert RomanTopicCounter.value(votes_list) == 0
   end
 
   test "values mixed votes" do
-    presence_list = %{
-      "fred" => "+",
-      "wilma" => "+",
-      "barney" => "=",
-    }
-    assert RomanTopicCounter.value(presence_list) == 2
+    votes_list = [
+      "+",
+      "+",
+      "=",
+    ]
+    assert RomanTopicCounter.value(votes_list) == 2
   end
 
   test "result is upvote" do
-    presence_list = %{
-      "fred" => "+",
-      "wilma" => "+"
-    }
-    assert RomanTopicCounter.result(presence_list) == :+
+    votes_list = [
+      "+",
+      "+"
+    ]
+    assert RomanTopicCounter.result(votes_list) == :+
   end
 
   test "result single user" do
-    presence_list = %{
-      "wilma" => "+"
-    }
-    assert RomanTopicCounter.result(presence_list) == :+
+    votes_list = [
+      "+"
+    ]
+    assert RomanTopicCounter.result(votes_list) == :+
   end
 
   test "result downvote" do
-    presence_list = %{
-      "fred" => "-",
-      "wilma" => "-"
-    }
-    assert RomanTopicCounter.result(presence_list) == :-
+    votes_list = [
+      "-",
+      "-"
+    ]
+    assert RomanTopicCounter.result(votes_list) == :-
   end
 
   test "result tie" do
-    presence_list = %{
-      "fred" => "=",
-      "wilma" => "="
-    }
-    assert RomanTopicCounter.result(presence_list) == :-
+    votes_list = [
+      "=",
+      "="
+    ]
+    assert RomanTopicCounter.result(votes_list) == :-
   end
 
   test "all outstanding" do
-    presence_list = %{
-      "fred" => "",
-      "wilma" => "",
-      "barney" => "",
-    }
-    assert RomanTopicCounter.outstanding(presence_list) == 3
+    votes_list = [
+      "",
+      "",
+      "",
+    ]
+    assert RomanTopicCounter.outstanding(votes_list) == 3
   end
 
   test "some outstanding" do
-    presence_list = %{
-      "fred" => "=",
-      "wilma" => "",
-      "barney" => "",
-    }
-    assert RomanTopicCounter.outstanding(presence_list) == 2
+    votes_list = [
+      "=",
+      "",
+      "",
+    ]
+    assert RomanTopicCounter.outstanding(votes_list) == 2
   end
 
   test "result all outstanding" do
-    presence_list = %{
-      "fred" => "",
-      "wilma" => "",
-      "barney" => "",
-    }
-    assert RomanTopicCounter.result(presence_list) == :inconclusive
+    votes_list = [
+      "",
+      "",
+      "",
+    ]
+    assert RomanTopicCounter.result(votes_list) == :inconclusive
   end
 
   test "result insufficient votes" do
-    presence_list = %{
-      "fred" => "+",
-      "wilma" => "",
-      "barney" => "",
-    }
-    assert RomanTopicCounter.result(presence_list) == :inconclusive
+    votes_list = [
+      "+",
+      "",
+      "",
+    ]
+    assert RomanTopicCounter.result(votes_list) == :inconclusive
   end
 
   test "result tie with one outstanding" do
-    presence_list = %{
-      "fred" => "+",
-      "wilma" => "",
-      "barney" => "-",
-    }
-    assert RomanTopicCounter.result(presence_list) == :inconclusive
+    votes_list = [
+      "+",
+      "",
+      "-",
+    ]
+    assert RomanTopicCounter.result(votes_list) == :inconclusive
   end
 
   test "result with not enough outstanding to change outcome" do
-    presence_list = %{
-      "fred" => "+",
-      "wilma" => "",
-      "barney" => "+",
-    }
-    assert RomanTopicCounter.result(presence_list) == :+
+    votes_list = [
+      "+",
+      "",
+      "+",
+    ]
+    assert RomanTopicCounter.result(votes_list) == :+
   end
 
   test "result with enough outstanding to change outcome" do
-    presence_list = %{
-      "fred" => "+",
-      "wilma" => "",
-      "pebbles" => "",
-      "betty" => "",
-      "barney" => "+",
-    }
-    assert RomanTopicCounter.result(presence_list) == :inconclusive
+    votes_list = [
+      "+",
+      "",
+      "",
+      "",
+      "+",
+    ]
+    assert RomanTopicCounter.result(votes_list) == :inconclusive
   end
 
   test "result with enough outstanding to tie outcome" do
-    presence_list = %{
-      "fred" => "+",
-      "wilma" => "",
-      "betty" => "",
-      "barney" => "+",
-    }
+    votes_list = [
+      "+",
+      "",
+      "",
+      "+",
+    ]
     # TODO: should this be `:inconclusive`?
-    assert RomanTopicCounter.result(presence_list) == :+
+    assert RomanTopicCounter.result(votes_list) == :+
   end
 
 end
