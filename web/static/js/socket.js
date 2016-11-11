@@ -199,7 +199,7 @@ function addTopic(topicHtml) {
 function startTimerRenderLoop() {
   setInterval(function () {
     renderTimerIfSet()
-  }, 1000)
+  }, 100)
 }
 
 function renderTimerIfSet() {
