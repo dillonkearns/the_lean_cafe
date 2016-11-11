@@ -41,11 +41,11 @@ defmodule TheLeanCafe.RomanTopicCounterTest do
   end
 
   test "all outstanding" do
-    assert RomanTopicCounter.outstanding(["", "", "",]) == 3
+    assert RomanTopicCounter.outstanding_count(["", "", "",]) == 3
   end
 
   test "some outstanding" do
-    assert RomanTopicCounter.outstanding(["=", "", "",]) == 2
+    assert RomanTopicCounter.outstanding_count(["=", "", "",]) == 2
   end
 
   test "result all outstanding" do
