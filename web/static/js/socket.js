@@ -217,7 +217,7 @@ function renderTimerIfSet() {
 }
 
 function renderTimeRemaining(minutes, seconds) {
-  $('#timer').text(`${zeroPad(minutes)}:${zeroPad(seconds)}`)
+  $('#timer').text(`${minutes}:${zeroPad(seconds)}`)
 }
 
 function zeroPad(n) {
