@@ -12,7 +12,7 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   def handle_info({:after_join, _params}, socket = %{topic: "table:" <> table_hashid}) do
-    track_new_user(socket)
+    socket = track_new_user(socket)
     table_id = Obfuscator.decode(table_hashid)
     table = Repo.get!(Table, table_id)
     push socket, "topics", topics_payload(table)
@@ -134,9 +134,9 @@ defmodule TheLeanCafe.TableChannel do
       joined_at: :os.system_time(:milli_seconds),
       avatar: Map.get(socket.assigns, :avatar)
     })
-    IO.inspect Presence.list(socket)
     push(socket, "user", %{username: username, avatar: Map.get(socket.assigns, :avatar)})
     broadcast_users(socket)
+    socket
   end
 
   defp track_new_user(socket) do
@@ -155,6 +155,7 @@ defmodule TheLeanCafe.TableChannel do
 
     push(socket, "user", %{username: user.username, avatar: user.avatar})
     broadcast_users(socket)
+    socket
   end
 
   defp broadcast_roman_result(socket, result) do
