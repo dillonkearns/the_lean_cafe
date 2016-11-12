@@ -193,6 +193,13 @@ defmodule TheLeanCafe.TableChannel do
     broadcast! socket, "topics", topics_payload(table)
   end
 
+  intercept ["presence_diff"]
+
+  def handle_out("presence_diff", msg, socket) do
+    broadcast_users(socket)
+    {:noreply, socket}
+  end
+
   def handle_out(event, payload, socket) do
     push socket, event, payload
     {:noreply, socket}
