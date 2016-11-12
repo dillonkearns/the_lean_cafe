@@ -84,15 +84,7 @@ function joinChannel(channel) {
     .receive("error", resp => { console.log("Unable to join", resp) })
 
   window.channel = channel
-
-    $('#username-group').addClass('has-success')
-    $('#username-group').addClass('has-feedback')
 }
-
-$('#username-group').on('input', function() {
-  $('#username-group').removeClass('has-success')
-  $('#username-group').removeClass('has-feedback')
-})
 
 let channel = createChannel(myUsername())
 joinChannel(channel)
@@ -106,10 +98,6 @@ function reconnectAs(username) {
 let chatInput = document.querySelector("#topic-input")
 let messagesContainer = document.querySelector("#topics")
 let topicInputForm = $(".topic-input-form")
-
-$('#username-input').change(function () {
-  reconnectAs($('#username-input').val())
-})
 
 function renderVote(vote) {
   let icon
