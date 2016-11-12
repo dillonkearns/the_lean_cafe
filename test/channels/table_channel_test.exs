@@ -72,7 +72,7 @@ defmodule TheLeanCafe.Channels.TableChannelTest do
 
   test "generates anonymous username", %{socket: socket, table: table} do
     {:ok, _reply, _socket} = subscribe_and_join_table(socket, table)
-    assert_push "username", response
+    assert_push "user", response
     assert response.username == "Anonymous Bear"
   end
 
