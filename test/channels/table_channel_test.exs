@@ -70,6 +70,12 @@ defmodule TheLeanCafe.Channels.TableChannelTest do
     assert_times_equal countdown_to, Timex.parse!(countdown_response.countdown_to, "%FT%T%:z", :strftime)
   end
 
+  test "generates anonymous username", %{socket: socket, table: table} do
+    {:ok, _reply, _socket} = subscribe_and_join_table(socket, table)
+    assert_push "username", response
+    assert response.username == "Anonymoose"
+  end
+
   def assert_n_minutes_later(earlier_time, later_time, n) do
     diff_seconds = Timex.diff(later_time, earlier_time, :seconds)
     threshold = 5
