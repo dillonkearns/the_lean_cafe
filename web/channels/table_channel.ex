@@ -143,7 +143,7 @@ defmodule TheLeanCafe.TableChannel do
     online_users =
       Presence.list(socket)
       |> Map.keys
-    user = TheLeanCafe.AnonymousUser.generate(online_users)
+    user = TheLeanCafe.AnonymousAnimal.generate(online_users)
     socket =
       socket
       |> assign(:username, user.username)

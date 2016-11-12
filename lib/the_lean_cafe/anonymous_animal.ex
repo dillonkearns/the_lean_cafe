@@ -1,4 +1,4 @@
-defmodule TheLeanCafe.AnonymousUser do
+defmodule TheLeanCafe.AnonymousAnimal do
 
   @users [
     %{username: "Anonymous Bear", avatar: "http://www.shutterstock.com/blog/wp-content/uploads/sites/5/2014/08/who-nose-grizzly-bear.jpg"},
