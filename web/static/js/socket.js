@@ -46,8 +46,10 @@ function joinChannel(channel) {
     window.countdown_to = payload.countdown_to
   })
 
-  channel.on('username', payload => {
+  channel.on('user', payload => {
     window.username = payload.username
+    $('.current-user .avatar').attr('src', payload.avatar)
+    $('.current-user .username').text(payload.username)
   })
 
   channel.on("new_topic", payload => {

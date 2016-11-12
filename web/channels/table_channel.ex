@@ -135,7 +135,7 @@ defmodule TheLeanCafe.TableChannel do
       avatar: Map.get(socket.assigns, :avatar)
     })
     IO.inspect Presence.list(socket)
-    push(socket, "username", %{username: username})
+    push(socket, "user", %{username: username, avatar: Map.get(socket.assigns, :avatar)})
     broadcast_users(socket)
   end
 
@@ -153,7 +153,7 @@ defmodule TheLeanCafe.TableChannel do
       avatar: Map.get(socket.assigns, :avatar)
     })
 
-    push(socket, "username", %{username: user.username})
+    push(socket, "user", %{username: user.username, avatar: user.avatar})
     broadcast_users(socket)
   end
 

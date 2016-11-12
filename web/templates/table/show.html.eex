@@ -29,8 +29,12 @@
       <div class="row">
         <div>
 
+          <div class="current-user">
+            <img class="img-circle avatar" style="max-width: 60px;"/>
+            <span class="username"></span>
+          </div>
+
           <%= if @current_user do %>
-            <%= render "user.html", current_user: @current_user %>
             <%= link "Logout", to: auth_path(@conn, :delete), method: :delete, class: "btn btn-danger" %>
           <% else %>
             <a class="btn btn-primary btn-lg" href="/auth/github">
