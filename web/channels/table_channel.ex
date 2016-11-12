@@ -129,11 +129,31 @@ defmodule TheLeanCafe.TableChannel do
     {:reply, :ok, socket}
   end
 
-  defp track_new_user(socket) do
+  defp track_new_user(socket = %{assigns: %{username: username, avatar: avatar}}) do
     Presence.track(socket, socket.assigns.username, %{
       joined_at: :os.system_time(:milli_seconds),
       avatar: Map.get(socket.assigns, :avatar)
     })
+    IO.inspect Presence.list(socket)
+    push(socket, "username", %{username: username})
+    broadcast_users(socket)
+  end
+
+  defp track_new_user(socket) do
+    online_users =
+      Presence.list(socket)
+      |> Map.keys
+    user = TheLeanCafe.AnonymousUser.generate(online_users)
+    socket =
+      socket
+      |> assign(:username, user.username)
+      |> assign(:avatar, user.avatar)
+    Presence.track(socket, user.username, %{
+      joined_at: :os.system_time(:milli_seconds),
+      avatar: Map.get(socket.assigns, :avatar)
+    })
+
+    push(socket, "username", %{username: user.username})
     broadcast_users(socket)
   end
 
@@ -164,7 +184,8 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   defp broadcast_users(socket) do
-    broadcast! socket, "users", %{users: connected_users(socket)}
+    connected_users = connected_users(socket)
+    broadcast! socket, "users", %{users: connected_users}
   end
 
   defp broadcast_topics(socket, table) do

@@ -29,8 +29,7 @@ defmodule TheLeanCafe.UserSocket do
   end
 
   def connect(_params, socket) do
-    username = "anonymous"
-    {:ok, assign(socket, :username, username)}
+    {:ok, socket}
   end
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #

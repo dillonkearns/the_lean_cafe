@@ -13,13 +13,19 @@ function getAvatar() {
 }
 
 function createChannel(username) {
-  socket = new Socket("/socket", {params: {username: username, avatar: getAvatar(), table_hash: roomHash()}})
+  let params
+  if (username && username !== "") {
+    params = {username: username, avatar: getAvatar(), table_hash: roomHash()}
+  } else {
+    params = {table_hash: roomHash()}
+  }
+  socket = new Socket("/socket", {params: params})
   socket.connect()
   return socket.channel(`table:${roomHash()}`, {})
 }
 
 function myUsername() {
-  return $('#user-nickname').val() || $('#username-input').val() || "anonymous"
+  return $('#user-nickname').val()
 }
 
 function highlightMyVote(lastVote) {
@@ -40,6 +46,10 @@ function joinChannel(channel) {
     window.countdown_to = payload.countdown_to
   })
 
+  channel.on('username', payload => {
+    window.username = payload.username
+  })
+
   channel.on("new_topic", payload => {
     addTopic(payload.body)
   })
@@ -48,9 +58,9 @@ function joinChannel(channel) {
   })
 
   channel.on("users", payload => {
-    let thisUser = payload.users.find(user => user.username === myUsername())
+    let thisUser = payload.users.find(user => user.username === window.username)
     highlightMyVote(thisUser.last_vote)
-    let otherUsers = payload.users.filter(user => user.username !== myUsername())
+    let otherUsers = payload.users.filter(user => user.username !== window.username)
     renderUsernames(otherUsers)
   })
 
