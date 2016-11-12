@@ -83,7 +83,7 @@ defmodule TheLeanCafe.TableChannel do
       Table.clear_votes(table) |> Repo.update!
     end
 
-    if roman_result == :- do
+    if roman_result == :- && current_topic do
       Repo.get!(Topic, current_topic.id)
       |> Topic.complete
       |> Repo.update!
