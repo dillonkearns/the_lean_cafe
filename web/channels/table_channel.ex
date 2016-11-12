@@ -130,11 +130,11 @@ defmodule TheLeanCafe.TableChannel do
   end
 
   defp track_new_user(socket = %{assigns: %{username: username, avatar: avatar}}) do
-    Presence.track(socket, socket.assigns.username, %{
+    Presence.track(socket, username, %{
       joined_at: :os.system_time(:milli_seconds),
       avatar: Map.get(socket.assigns, :avatar)
     })
-    push(socket, "user", %{username: username, avatar: Map.get(socket.assigns, :avatar)})
+    push(socket, "user", %{username: username, avatar: avatar})
     broadcast_users(socket)
     socket
   end
