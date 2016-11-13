@@ -15,8 +15,7 @@ defmodule TheLeanCafe.AnonymousAnimal do
   ]
 
   def generate(online_usernames) do
-    username =
-      @users |> Enum.find(&(!(&1.username in online_usernames)))
+    Enum.find(@users, &(!(&1.username in online_usernames)))
   end
 
 end
