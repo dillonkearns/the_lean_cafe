@@ -5,6 +5,7 @@ defmodule TheLeanCafe.AnonymousAnimal do
     %{username: "Anonymous Fox", avatar: "/images/fox.jpg"},
     %{username: "Anonymous Lemur", avatar: "/images/lemur.jpg"},
     %{username: "Anonymous Dog", avatar: "/images/dog.jpg"},
+    %{username: "Anonymous Goat", avatar: "/images/goat.jpg"},
     %{username: "Anonymous Lion", avatar: "/images/lion.jpg"},
     %{username: "Anonymous Alpaca", avatar: "/images/alpaca.jpg"},
     %{username: "Anonymous Cow", avatar: "/images/cow.jpg"},
